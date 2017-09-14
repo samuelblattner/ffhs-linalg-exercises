@@ -5,3 +5,5 @@ Currently implemented:
 - Exercise 1: "Wohin klickt die Maus" (en: "Where was the mouse clicked?")
 
 Check out [this](https://samuelblattner.github.io/ffhs-linalg-exercises/) page for documentation.
+
+.
