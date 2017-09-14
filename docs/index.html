@@ -11,4 +11,16 @@ in a TabPane so that each Tab represents and loads one exercise. The <i>Applicat
 The <i>ApplicationController</i> is responsible for loading the individual exercises dynamically into the tabs of the TabPane. After the main window has successfully
 loaded, the <i>Main</i> class calls the controller to initialize the tabs and load the first exercise.
 
+All exercises must implement the <i>ifExercise</i> interface.
+
+<h3>Exercises-Package</h3>
+Since many of the exercises are going to use common components, it is a good idea to only implement them once and make them available to the exercises. Here's a short
+description on the common parts:
+
+<h4>ifCanvasDrawable interface</h4>
+
+
+
 <h2>Exercise 1: "Wohin klickt die Maus?" (en: "Where was the mouse clicked?")</h2>
+
+
