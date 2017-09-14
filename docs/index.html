@@ -18,7 +18,9 @@ Since many of the exercises are going to use common components, it is a good ide
 description on the common parts:
 
 <h4>ifCanvasDrawable interface</h4>
-
+This interface must be implemented by all objects that need to be drawn on a JavaFX Canvas. Drawables will be iteratively called by the main render routine using the
+<i>draw</i> method and by passing a GraphicsContext reference. Thus, the actual process of drawing is delegated to the individual drawables themselves since they know
+best how to do it. The only thing that is decided by the class rendering the scene is <i>where (which GraphicsContext)</i> and <i>when</i> the objects are drawn.
 
 
 <h2>Exercise 1: "Wohin klickt die Maus?" (en: "Where was the mouse clicked?")</h2>
