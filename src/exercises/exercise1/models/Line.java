@@ -72,6 +72,7 @@ public class Line implements ifCanvasDrawable {
     }
 
     // ========================== ifCanvasDrawable Methods ===========================
+    // ===============================================================================
     /**
      * Checks if a given point lies on a line. This operation involves two steps:
      * 1. Check if the point lies within 180 degrees facing this line instance on both ends

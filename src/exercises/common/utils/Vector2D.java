@@ -1,7 +1,7 @@
 package exercises.common.utils;
 
 /**
- * Created by samuelblattner on 28.08.17.
+ * Specialized Matrix representing a 2D-Vector.
  */
 public class Vector2D extends Matrix {
 

@@ -12,17 +12,18 @@ import exercises.exercise1.Exercise1;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 
 public class ApplicationController {
 
-    private static HashMap<String, Class> EXERCISES = new HashMap<String, Class>();
+    // Statics
+    private static final HashMap<String, Class> EXERCISES = new HashMap<String, Class>();
     private static boolean applicationIsReady = false;
 
     static {
         ApplicationController.EXERCISES.put("EX1", Exercise1.class);
     }
 
+    // References
     @FXML
     private TabPane applicationTabPane;
 

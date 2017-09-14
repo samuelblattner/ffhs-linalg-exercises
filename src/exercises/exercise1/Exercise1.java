@@ -1,25 +1,20 @@
 package exercises.exercise1;
 
-import exercises.common.AbstractCanvasExercise;
-import exercises.common.utils.Vector2D;
-import exercises.exercise1.models.Line;
+import exercises.common.models.ifCanvasDrawable;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 
-import javax.swing.event.ChangeListener;
 import java.io.IOException;
-import java.util.ArrayList;
 
+import exercises.common.AbstractCanvasExercise;
+import exercises.common.utils.Vector2D;
+import exercises.exercise1.models.Line;
 
 /**
  * LinAlg.BSc INF 2015.ZH5-Mo.HS17/18: Exercise 1
@@ -36,12 +31,13 @@ public class Exercise1 extends AbstractCanvasExercise {
                                                 "- Das Zeichenprogramm kann Strecken zeichnen durch Dragging der Maus.\n" +
                                                 "- Durch Doppelklick auf eine bereits gezeichnete Strecke wird diese wieder gelöscht.";
 
+    private static final String EXERCISE_CONTROLS_PATH = "ui/exercise1-controls.fxml";
+
     // State
     private boolean isDragging = false;
     private float thickness = 1.0f;
 
     // References
-    private ArrayList<Line> lines = new ArrayList<Line>();
     private Line currentLine;
 
     private Slider sldTolerance, sldThickness;
@@ -50,8 +46,12 @@ public class Exercise1 extends AbstractCanvasExercise {
     // GUI
     private GridPane exerciseLayout;
 
+    /**
+     * Build the control GUI for this Exercise.
+     * @param container Container to contain the controls
+     */
     private void buildGUI(BorderPane container) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("ui/exercise1-controls.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(EXERCISE_CONTROLS_PATH));
         try {
             loader.setController(this);
             exerciseLayout = loader.load();
@@ -63,18 +63,16 @@ public class Exercise1 extends AbstractCanvasExercise {
             lbThickness = (Label) exerciseLayout.lookup("#lbThickness");
 
         } catch (IOException e) {
-
+            System.err.format("Unable to load Controls Interface for Exercise 1 (%s).", EXERCISE_CONTROLS_PATH);
         }
     }
 
-    public void hurrli() {
-        System.out.println("burrli");
-    }
-
     /**
-     * Create all required event listeners for this exercise.
+     * Create all required event listeners for this Exercise.
      */
     private void establishEventListeners() {
+
+        // TODO: React to window size changes and adapt canvas
 
         /*
         When the first dragging event occurs, create a new line. Else, set the end coordinates of the
@@ -93,6 +91,7 @@ public class Exercise1 extends AbstractCanvasExercise {
 
                     currentLine = new Line(x, y, x, y);
                     currentLine.setThickness(thickness);
+                    drawables.add(currentLine);
                 }
             }
         });
@@ -106,7 +105,6 @@ public class Exercise1 extends AbstractCanvasExercise {
             public void handle(MouseEvent event) {
                 if (isDragging) {
                     isDragging = false;
-                    lines.add(currentLine);
                     currentLine = null;
                 }
             }
@@ -121,7 +119,7 @@ public class Exercise1 extends AbstractCanvasExercise {
             @Override
             public void handle(MouseEvent event) {
                 if (!isDragging) {
-                    for (Line line: lines) {
+                    for (ifCanvasDrawable line: drawables) {
                         if (line.isPointInside(new Vector2D(event.getX(), event.getY()))) {
                             line.setSelected(true);
                         } else {
@@ -142,7 +140,7 @@ public class Exercise1 extends AbstractCanvasExercise {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() == 2) {
-                    for (Line line: lines) {
+                    for (ifCanvasDrawable line: drawables) {
                         if (line.isPointInside(new Vector2D(event.getX(), event.getY()))) {
                             line.setDeleted(true);
                         }
@@ -157,7 +155,7 @@ public class Exercise1 extends AbstractCanvasExercise {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 lbThickness.setText(String.format("%.0f px", newValue.floatValue()));
-                for (Line line: lines) {
+                for (ifCanvasDrawable line: drawables) {
                     line.setThickness(newValue.floatValue());
                 }
                 thickness = newValue.floatValue();
@@ -174,46 +172,29 @@ public class Exercise1 extends AbstractCanvasExercise {
         });
     }
 
-    /**
-     * Remove all lines that are in deleted state from the collection.
-     */
-    private void cleanScene() {
-        ArrayList<Line> deletables = new ArrayList<Line>();
-        for (Line line: lines) {
-            if (line.isDeleted()) {
-                deletables.add(line);
-            }
-        }
-
-        lines.removeAll(deletables);
-    }
-
-    /**
-     * Clear the canvas and re-draw all graphical elements.
-     * In this case these are just lines.
-     */
-    private void render() {
-        gc.clearRect(0, 0, screenWidth, screenHeight);
-
-        for (Line line: lines) {
-            line.draw(gc);
-        }
-        if (currentLine != null) {
-            currentLine.draw(gc);
-        }
-    }
-
     // ==================== ifExercise Methods ============================
+    /**
+     * Return Exercise Name / Title
+     * @return {String} Exercise Name
+     */
     @Override
     public String getExerciseName() {
         return EXERCISE_NAME;
     }
 
+    /**
+     * Return Exercise Description.
+     * @return {String} Exercise Description
+     */
     @Override
     public String getExerciseDescription() {
         return EXERCISE_DESC;
     }
 
+    /**
+     * Called when the Exercise has been initialized and is ready
+     * for post-initialization routines.
+     */
     @Override
     protected void onExerciseInitialized() {
         buildGUI(container);

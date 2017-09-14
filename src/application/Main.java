@@ -18,7 +18,6 @@ public class Main extends Application {
         ((ApplicationController) loader.getController()).onApplicationReady();
     }
 
-
     public static void main(String[] args) {
         launch(args);
     }
