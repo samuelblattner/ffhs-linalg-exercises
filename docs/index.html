@@ -23,7 +23,18 @@ This interface must be implemented by all objects that need to be drawn on a Jav
 best how to do it. The only thing that is decided by the class rendering the scene is <i>where (which GraphicsContext)</i> and <i>when</i> the objects are drawn.
 
 <h4>AbstractExercise class</h4>
+Implements an exercise container in its very basic functionalities. All it does is storing a reference to the main exercise container (i.e. the Tab's contents) and
+calling the <i>onExerciseInitialized</i> hook.
 
+<h4>AbstractCanvasExercise class</h4>
+Basic implementation of a JavaFX-Canvas based exercise. This class extends the <i>AbstractExercise class</i> and implements all steps required to set up a
+JavaFX-Canvas element. A reference to the GraphicsContext of the Canvas is stored as <i>protected</i> so that it is available to all subclasses.
+
+<h4>Matrix class</h4>
+...
+
+<h4>Vector2D class</h4>
+...
 
 <h2>Exercise 1: "Wohin klickt die Maus?" (en: "Where was the mouse clicked?")</h2>
 
