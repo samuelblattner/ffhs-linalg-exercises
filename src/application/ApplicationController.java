@@ -74,7 +74,8 @@ public class ApplicationController {
     }
 
     /**
-     * Called when a Tab is selected. Loads the Exercise of the tab specified.
+     * Called when a Tab is selected. Loads the Exercise corresponding to the
+     * selected Tab.
      * @param event Select event
      */
     public void onTabSelected(Event event) {

@@ -1,1 +1,14 @@
 <h1>LinAlg Exercises</h1>
+
+<h2>General notes on architecture</h2>
+This is a JavaFX application which is split up into two major packages: The <strong>Application-Package</strong> and the <strong>Exercises-Package</strong>.
+
+<h3>Application-Package</h3>
+This package contains the main entry point of the application (<i>class Main</i>). The <i>Main</i> class loads the main window that will contain all exercises
+in a TabPane so that each Tab represents and loads one exercise. The <i>ApplicationController</i> class is assigned as controller to the application via the
+<i>application.fxml</i> user interface.
+
+The <i>ApplicationController</i> is responsible for loading the individual exercises dynamically into the tabs of the TabPane. After the main window has successfully
+loaded, the <i>Main</i> class calls the controller to initialize the tabs and load the first exercise.
+
+<h2>Exercise 1: "Wohin klickt die Maus?" (en: "Where was the mouse clicked?")</h2>
