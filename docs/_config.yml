@@ -2,3 +2,5 @@ theme: jekyll-theme-slate
 
 title: LinAlg Exercises
 description: Description
+
+highlighter: rouge
