@@ -119,11 +119,11 @@ public class Exercise1 extends AbstractCanvasExercise {
             @Override
             public void handle(MouseEvent event) {
                 if (!isDragging) {
-                    for (ifCanvasDrawable line: drawables) {
-                        if (line.isPointInside(new Vector2D(event.getX(), event.getY()))) {
-                            line.setSelected(true);
+                    for (ifCanvasDrawable drawable: drawables) {
+                        if (drawable.isPointInside(new Vector2D(event.getX(), event.getY()))) {
+                            drawable.setSelected(true);
                         } else {
-                            line.setSelected(false);
+                            drawable.setSelected(false);
                         }
                     }
                     render();
@@ -140,9 +140,9 @@ public class Exercise1 extends AbstractCanvasExercise {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() == 2) {
-                    for (ifCanvasDrawable line: drawables) {
-                        if (line.isPointInside(new Vector2D(event.getX(), event.getY()))) {
-                            line.setDeleted(true);
+                    for (ifCanvasDrawable drawable: drawables) {
+                        if (drawable.isPointInside(new Vector2D(event.getX(), event.getY()))) {
+                            drawable.setDeleted(true);
                         }
                     }
                     cleanScene();

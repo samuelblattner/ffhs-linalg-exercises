@@ -56,7 +56,7 @@ So, let's define the requirements for our program:
 2. Listen to double-clicks and determine if the click was performed on a line segment. If this is the case, remove the line from the canvas.
 3. This is an extra: Provide some UI-controls to set the line width and click tolerance (i.e. the size of the surrounding space to a line in which a click is still accepted as "being on the line").
 
-Let's walk through some of the most important parts of the application:
+Let's walk through some of the parts of the application. I will use an outside-in approach to explain how the application works:
 
 ### Setting up the exercise
 Since this exercise is using JavaFX-Canvas, it inherits from the _AbstractCanvasExercise_ class. The exercise basically initializes the following way:
@@ -64,8 +64,8 @@ Since this exercise is using JavaFX-Canvas, it inherits from the _AbstractCanvas
 1. When the _onExerciseInitialized_ hook is called, build the additional GUI elements relevant to this exercise (req. 3). 
 2. Then, create all necessary event listeners to provide the desired functionalities.
 
-#### Listen for mouse movements
-The _establishEventListeners()_ method creates all listeners that are required to register mouse clicks, drags and releases. Let's start with the dragging:
+#### Listen for mouse actions
+The _establishEventListeners()_ method creates all listeners that are required to register mouse clicks, drags and releases. Let's start with the __dragging__:
 
 ```java
 container.addEventHandler(MouseEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
@@ -87,4 +87,78 @@ container.addEventHandler(MouseEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>
 });
 ```
 
+We assign an anonymous EventHandler<MouseEvent> class to the MOUSE_DRAGGED event. Whenever a drag-event occurs (i.e.
+left mouse button held down while moving the mouse) this class's _handle_ method is called. We differentiate between two
+cases:
+1. There have been draggin events prior to the current one and the _isDragging_ state variable is true. In this case we update the current line's end coordinates to the current mouse coordinates (i.e. moving the line's end along the mouse movement). Since the Canvas's contents have been updated, we need to call the _render_ method so that the Canvas is refreshed with the new material.
+2. The current event is the first dragging event (_isDragging_ state variable is false). This means that the user has just started dragging and we have to create a fresh new line segment. We also set the line's thickness and then add it to the list of drawables.
+
+Let's look at the __release__ event:
     
+```java
+container.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
+    @Override
+    public void handle(MouseEvent event) {
+        if (isDragging) {
+            isDragging = false;
+            currentLine = null;
+        }
+    }
+});
+```
+
+This listener quite simply sets the _isDragging_ state variable to false if it had been dragging prior to the release event. It also removes the rerference to the current line. Notice that the line is still being referenced from the _drawables_ collection so it continues to be drawn by the _render_ routine.
+
+The following listener is a little bit of an extra, too, but I think that it improves the user's experience:  
+
+```java
+container.addEventHandler(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
+    @Override
+    public void handle(MouseEvent event) {
+        if (!isDragging) {
+            for (ifCanvasDrawable drawable: drawables) {
+                if (drawable.isPointInside(new Vector2D(event.getX(), event.getY()))) {
+                    drawable.setSelected(true);
+                } else {
+                    drawable.setSelected(false);
+                }
+            }
+            render();
+        }
+    }
+});
+```
+
+For every MOUSE_MOVED event that is not a dragging event, we iterate over all drawables and check if any of them has 
+been 'hit' by the mouse by calling the _isPointInside_ method. If so, we set their state to 'selected'. 
+This will give the user a visual cue on the object's interactivity.
+
+Finally, let's look at how the lines can be deleted:
+
+```java
+container.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+    @Override
+    public void handle(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            for (ifCanvasDrawable drawable: drawables) {
+                if (drawable.isPointInside(new Vector2D(event.getX(), event.getY()))) {
+                    drawable.setDeleted(true);
+                }
+            }
+            cleanScene();
+            render();
+        }
+    }
+});
+```
+
+For every double-click (_getClickCount()_ == 2) we check every drawable if it's coordinates match the ones of the current
+mouse position. If so, we set their state to 'deleted'. After that, we call the _cleanScene_ method that deals with the
+deleted objects. Separating the concerns of _marking objects as deleted_ and _actually dealing (i.e. deleting) with 
+marked objects_ gives us two advantages:
+1. We can omit the rather messy operation of manipulating a collection while it's being iterated over.
+2. We are flexible to change the behaviour of deleting objects at any time without having to adapt the act of marking things for deletion at any time. We could acutally remove the objects from the collection, but we could also leave them or copy them to a separate 'deleted objects' collection so that they are potentially recoverable (i.e. their being deleted is "undoable").
+
+Now that we've covered the major parts of the exercise, let's look under the hood and look at the details.
+
+### Drawing, deleting and interacting with line segments
