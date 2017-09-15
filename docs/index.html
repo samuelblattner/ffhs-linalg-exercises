@@ -1,41 +1,49 @@
-<h1>LinAlg Exercises</h1>
+<!DOCTYPE html>
+<html>
 
-<h2>General notes on architecture</h2>
-This is a JavaFX application which is split up into two major packages: The <strong>Application-Package</strong> and the <strong>Exercises-Package</strong>.
+    <head>
+    </head>
 
-<h3>Application-Package</h3>
-This package contains the main entry point of the application (<i>class Main</i>). The <i>Main</i> class loads the main window that will contain all exercises
-in a TabPane so that each Tab represents and loads one exercise. The <i>ApplicationController</i> class is assigned as controller to the application via the
-<i>application.fxml</i> user interface.
+    <body>
+        <h1>LinAlg Exercises</h1>
 
-The <i>ApplicationController</i> is responsible for loading the individual exercises dynamically into the tabs of the TabPane. After the main window has successfully
-loaded, the <i>Main</i> class calls the controller to initialize the tabs and load the first exercise.
+            <h2>General notes on architecture</h2>
+            This is a JavaFX application which is split up into two major packages: The <strong>Application-Package</strong> and the <strong>Exercises-Package</strong>.
 
-All exercises must implement the <i>ifExercise</i> interface.
+                <h3>Application-Package</h3>
+                This package contains the main entry point of the application (<i>class Main</i>). The <i>Main</i> class loads the main window that will contain all exercises
+                in a TabPane so that each Tab represents and loads one exercise. The <i>ApplicationController</i> class is assigned as controller to the application via the
+                <i>application.fxml</i> user interface.
 
-<h3>Exercises-Package</h3>
-Since many of the exercises are going to use common components, it is a good idea to only implement them once and make them available to the exercises. Here's a short
-description on the common parts:
+                The <i>ApplicationController</i> is responsible for loading the individual exercises dynamically into the tabs of the TabPane. After the main window has successfully
+                loaded, the <i>Main</i> class calls the controller to initialize the tabs and load the first exercise.
 
-<h4>ifCanvasDrawable interface</h4>
-This interface must be implemented by all objects that need to be drawn on a JavaFX Canvas. Drawables will be iteratively called by the main render routine using the
-<i>draw</i> method and by passing a GraphicsContext reference. Thus, the actual process of drawing is delegated to the individual drawables themselves since they know
-best how to do it. The only thing that is decided by the class rendering the scene is <i>where (which GraphicsContext)</i> and <i>when</i> the objects are drawn.
+                All exercises must implement the <i>ifExercise</i> interface.
 
-<h4>AbstractExercise class</h4>
-Implements an exercise container in its very basic functionalities. All it does is storing a reference to the main exercise container (i.e. the Tab's contents) and
-calling the <i>onExerciseInitialized</i> hook.
+                <h3>Exercises-Package</h3>
+                Since many of the exercises are going to use common components, it is a good idea to only implement them once and make them available to the exercises. Here's a short
+                description on the common parts:
 
-<h4>AbstractCanvasExercise class</h4>
-Basic implementation of a JavaFX-Canvas based exercise. This class extends the <i>AbstractExercise class</i> and implements all steps required to set up a
-JavaFX-Canvas element. A reference to the GraphicsContext of the Canvas is stored as <i>protected</i> so that it is available to all subclasses.
+                    <h4>ifCanvasDrawable interface</h4>
+                    This interface must be implemented by all objects that need to be drawn on a JavaFX Canvas. Drawables will be iteratively called by the main render routine using the
+                    <i>draw</i> method and by passing a GraphicsContext reference. Thus, the actual process of drawing is delegated to the individual drawables themselves since they know
+                    best how to do it. The only thing that is decided by the class rendering the scene is <i>where (which GraphicsContext)</i> and <i>when</i> the objects are drawn.
 
-<h4>Matrix class</h4>
-...
+                    <h4>AbstractExercise class</h4>
+                    Implements an exercise container in its very basic functionalities. All it does is storing a reference to the main exercise container (i.e. the Tab's contents) and
+                    calling the <i>onExerciseInitialized</i> hook.
 
-<h4>Vector2D class</h4>
-...
+                    <h4>AbstractCanvasExercise class</h4>
+                    Basic implementation of a JavaFX-Canvas based exercise. This class extends the <i>AbstractExercise class</i> and implements all steps required to set up a
+                    JavaFX-Canvas element. A reference to the GraphicsContext of the Canvas is stored as <i>protected</i> so that it is available to all subclasses.
 
-<h2>Exercise 1: "Wohin klickt die Maus?" (en: "Where was the mouse clicked?")</h2>
+                    <h4>Matrix class</h4>
+                    ...
 
+                    <h4>Vector2D class</h4>
+                    ...
 
+            <h2>Exercise 1: "Wohin klickt die Maus?" (en: "Where was the mouse clicked?")</h2>
+
+    </body>
+</html>
