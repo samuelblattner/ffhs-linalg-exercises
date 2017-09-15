@@ -7,6 +7,11 @@ public class Vector2D extends Matrix {
 
     private double length = 0;
 
+    /**
+     * Constructor.
+     * @param dx
+     * @param dy
+     */
     public Vector2D(double dx, double dy) {
         super(1, 2);
         setValue(0, 0, dx);
@@ -27,6 +32,11 @@ public class Vector2D extends Matrix {
         return length;
     }
 
+    /**
+     * Calculate the scalar product of this vector and another.
+     * @param otherVector
+     * @return {double}
+     */
     public double scalar(Vector2D otherVector) {
         return getValue(0, 0) * otherVector.getValue(0, 0) + getValue(0, 1) * otherVector.getValue(0, 1);
     }

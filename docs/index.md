@@ -41,11 +41,50 @@ Basic implementation of a JavaFX-Canvas based exercise. This class extends the _
 JavaFX-Canvas element. A reference to the GraphicsContext of the Canvas is stored as _protected_ so that it is available to all subclasses.
 
 #### Matrix class
-...
+This class represents a model of a matrix and provides methods to get and set values and to perform simple mathematical operations.
+The dimensions of the matrix are set on initialization and are immutable. 
 
 #### Vector2D class
-...
+As vectors are a specialized form of matrices, the Vector2D class inherits from the Matrix class. It implements methods for vector-specific operations
+such as calculating its length (i.e. magnitude) and scalar product for example.
 
-## Exercise 1: "Wohin klickt die Maus?" (en: "Where was the mouse clicked?")
+## Exercise 1: "Wohin klickt die Maus?"
+The basic goal behind this exercise is to determine whether a given set of coordinates lie on a specific straight line segment or not, using linear algebra.
+
+So, let's define the requirements for our program:
+1. Provide a canvas for the user to draw straight line segments by dragging the mouse.
+2. Listen to double-clicks and determine if the click was performed on a line segment. If this is the case, remove the line from the canvas.
+3. This is an extra: Provide some UI-controls to set the line width and click tolerance (i.e. the size of the surrounding space to a line in which a click is still accepted as "being on the line").
+
+Let's walk through some of the most important parts of the application:
+
+### Setting up the exercise
+Since this exercise is using JavaFX-Canvas, it inherits from the _AbstractCanvasExercise_ class. The exercise basically initializes the following way:
+
+1. When the _onExerciseInitialized_ hook is called, build the additional GUI elements relevant to this exercise (req. 3). 
+2. Then, create all necessary event listeners to provide the desired functionalities.
+
+#### Listen for mouse movements
+The _establishEventListeners()_ method creates all listeners that are required to register mouse clicks, drags and releases. Let's start with the dragging:
+
+```java
+container.addEventHandler(MouseEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
+    @Override
+    public void handle(MouseEvent event) {
+        if (isDragging) {
+            currentLine.setEndCoordinates(event.getX(), event.getY());
+            render();
+        } else {
+            isDragging = true;
+            double x = event.getX();
+            double y = event.getY();
+
+            currentLine = new Line(x, y, x, y);
+            currentLine.setThickness(thickness);
+            drawables.add(currentLine);
+        }
+    }
+});
+```
 
     
