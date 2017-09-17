@@ -159,6 +159,40 @@ marked objects_ gives us two advantages:
 1. We can omit the rather messy operation of manipulating a collection while it's being iterated over.
 2. We are flexible to change the behaviour of deleting objects at any time without having to adapt the act of marking things for deletion at any time. We could acutally remove the objects from the collection, but we could also leave them or copy them to a separate 'deleted objects' collection so that they are potentially recoverable (i.e. their being deleted is "undoable").
 
-Now that we've covered the major parts of the exercise, let's look under the hood and look at the details.
+Now that we've covered the major parts of the exercise, let's look under the hood and check out how the lines are handled.
 
 ### Drawing, deleting and interacting with line segments
+
+In order to follow the object oriented path we use a Line model that handles all the business logic concerning line segments i.e. drawing, moving and 
+checking if a given set of coordinates lies on the line segment. As mentioned earlier in the common section, every object
+that we want to draw on Canvas must implement the ifCanvasDrawable interface. Let's start with how the line is drawn:
+
+#### Drawing lines
+Our _Line_ model implements the _ifCanvasDrawable_ interface and thus the _draw_ method. The draw method is passed a
+_GraphicsContext_ object that allows us to draw on a Canvas. So, all we have to do to draw a line instance is to set the line properties and then 
+draw the line using JavaFX built-in functions:
+
+```java
+    @Override
+    public void draw(GraphicsContext gc) {
+        gc.setStroke(selected ? selectedColor : color);
+        gc.setLineWidth(thickness);
+        gc.strokeLine(
+                pStart.getValue(0, 0),
+                pStart.getValue(0, 1),
+                pEnd.getValue(0, 0),
+                pEnd.getValue(0, 1)
+        );
+    }
+```
+
+Next, let's check out how we can determine if a given set of coordinates lies on the line or not.
+
+#### In the zone
+Calculating 
+
+
+
+
+
+
