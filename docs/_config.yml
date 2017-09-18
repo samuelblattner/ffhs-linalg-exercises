@@ -8,5 +8,7 @@ highlighter: rouge
 navigation:
  - title: Introduction
    url: /index.html
+   weight: 1
  - title: Exercise 1
    url: /exercises/exercise1.html
+   weight: 1

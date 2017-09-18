@@ -5,21 +5,24 @@ layout: default
 ## Exercise 1: "Wohin klickt die Maus?"
 The basic goal behind this exercise is to determine whether a given set of coordinates lie on a specific straight line segment or not, using linear algebra.
 
-So, let's define the requirements for our program:
-1. Provide a canvas for the user to draw straight line segments by dragging the mouse.
+First, let's define the requirements for our application:
+1. Provide a canvas for the user to draw line segments by dragging the mouse.
 2. Listen to double-clicks and determine if the click was performed on a line segment. If this is the case, remove the line from the canvas.
 3. This is an extra: Provide some UI-controls to set the line width and click tolerance (i.e. the size of the surrounding space to a line in which a click is still accepted as "being on the line").
 
 Let's walk through some of the parts of the application. I will use an outside-in approach to explain how the application works:
 
 ### Setting up the exercise
-Since this exercise is using JavaFX-Canvas, it inherits from the _AbstractCanvasExercise_ class. The exercise basically initializes the following way:
+Since this exercise is using JavaFX-Canvas, it inherits from the _AbstractCanvasExercise_ class described in the introduction. 
+Our Exercise 1 basically initializes the following way:
 
 1. When the _onExerciseInitialized_ hook is called, build the additional GUI elements relevant to this exercise (req. 3). 
 2. Then, create all necessary event listeners to provide the desired functionalities.
 
+We'll skip the JavaFx-specific steps of loading user interfaces dynamically and dig right into the interactive part:
+
 #### Listen for mouse actions
-The _establishEventListeners()_ method creates all listeners that are required to register mouse clicks, drags and releases. Let's start with the __dragging__:
+The _establishEventListeners()_ method creates all listeners that are required to handle mouse clicks, drags and releases. Let's start with the __dragging__:
 
 ```java
 container.addEventHandler(MouseEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
@@ -44,8 +47,11 @@ container.addEventHandler(MouseEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>
 We assign an anonymous EventHandler<MouseEvent> class to the MOUSE_DRAGGED event. Whenever a drag-event occurs (i.e.
 left mouse button held down while moving the mouse) this class's _handle_ method is called. We differentiate between two
 cases:
-1. There have been draggin events prior to the current one and the _isDragging_ state variable is true. In this case we update the current line's end coordinates to the current mouse coordinates (i.e. moving the line's end along the mouse movement). Since the Canvas's contents have been updated, we need to call the _render_ method so that the Canvas is refreshed with the new material.
-2. The current event is the first dragging event (_isDragging_ state variable is false). This means that the user has just started dragging and we have to create a fresh new line segment. We also set the line's thickness and then add it to the list of drawables.
+1. There have been draggin events prior to the current one and the exercise's _isDragging_ state variable is true. 
+In this case we update the current line's end coordinates to the current mouse coordinates (i.e. moving the line's end along the mouse movement). Since the Canvas's contents have been updated, we need to call the _render_ method so that the Canvas is refreshed with the new material.
+2. The current event is the first dragging event (_isDragging_ state variable is false). This means that the user 
+has just started dragging and we have to create a fresh new line segment. We also set the line's thickness and then 
+add our new line to the list of drawables. All drawables are held in the exercise's _drawables_ collection.
 
 Let's look at the __release__ event:
     
@@ -61,7 +67,9 @@ container.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent
 });
 ```
 
-This listener quite simply sets the _isDragging_ state variable to false if it had been dragging prior to the release event. It also removes the rerference to the current line. Notice that the line is still being referenced from the _drawables_ collection so it continues to be drawn by the _render_ routine.
+This listener quite simply sets the _isDragging_ state variable to false if the user was dragging the mouse prior to the release event. 
+It also removes the rerference to the current line. Notice that the line is still being referenced from the _drawables_ collection 
+so it continues to be drawn by the _render_ routine.
 
 The following listener is a little bit of an extra, too, but I think that it improves the user's experience:  
 
@@ -85,7 +93,7 @@ container.addEventHandler(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>()
 
 For every MOUSE_MOVED event that is not a dragging event, we iterate over all drawables and check if any of them has 
 been 'hit' by the mouse by calling the _isPointInside_ method. If so, we set their state to 'selected'. 
-This will give the user a visual cue on the object's interactivity.
+This will give the user a visual clue on the object's ability for interactivity.
 
 Finally, let's look at how the lines can be deleted:
 
@@ -106,25 +114,24 @@ container.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>
 });
 ```
 
-For every double-click (_getClickCount()_ == 2) we check every drawable if it's coordinates match the ones of the current
-mouse position. If so, we set their state to 'deleted'. After that, we call the _cleanScene_ method that deals with the
+For every double-click (_getClickCount()_ == 2) we check if the current mouse position matches any of the drawables.
+If so, we set their state to 'deleted'. After that, we call the _cleanScene_ method which deals with the
 deleted objects. Separating the concerns of _marking objects as deleted_ and _actually dealing (i.e. deleting) with 
 marked objects_ gives us two advantages:
 1. We can omit the rather messy operation of manipulating a collection while it's being iterated over.
-2. We are flexible to change the behaviour of deleting objects at any time without having to adapt the act of marking things for deletion at any time. We could acutally remove the objects from the collection, but we could also leave them or copy them to a separate 'deleted objects' collection so that they are potentially recoverable (i.e. their being deleted is "undoable").
+2. We are flexible to change the behaviour of deleting objects at any time without having to adapt the act of marking things for deletion. We could acutally remove the objects from the collection, but we could also leave them or copy them to a separate 'deleted objects' collection so that they are potentially recoverable (i.e. their being deleted is "undoable").
 
 Now that we've covered the major parts of the exercise, let's look under the hood and check out how the lines are handled.
 
 ### Drawing, deleting and interacting with line segments
-
-In order to follow the object oriented path we use a Line model that handles all the business logic concerning line segments i.e. drawing, moving and 
+In order to follow the object oriented path we use a LineSegment model that handles all business logic concerning line segments i.e. drawing, moving and 
 checking if a given set of coordinates lies on the line segment. As mentioned earlier in the common section, every object
-that we want to draw on Canvas must implement the ifCanvasDrawable interface. Let's start with how the line is drawn:
+that we want to draw on Canvas must implement the ifCanvasDrawable interface. This interface requires all implementing 
+classes to have a _draw_ method. So, let's start with this.
 
 #### Drawing lines
-Our _LineSegment_ model implements the _ifCanvasDrawable_ interface and thus the _draw_ method. The draw method is passed a
-_GraphicsContext_ object that allows us to draw on a Canvas. So, all we have to do to draw a line instance is to set the line properties and then 
-draw the line using JavaFX built-in functions:
+The draw method is passed a _GraphicsContext_ object that allows us to draw on a Canvas. 
+So, all we have to do to draw a line instance is to set the line properties and then draw the line using JavaFX built-in functions:
 
 ```java
     @Override
@@ -139,8 +146,10 @@ draw the line using JavaFX built-in functions:
         );
     }
 ```
+This method uses the LineSegment's _pStart_ and _pEnd_ properties to set the segment's start and end coordinates. Both
+ properties are are _Vector2D_ instances.
 
-Next, let's check out how we can determine if a given set of coordinates lies on the line or not.
+Next, let's check out how we can determine if a given set of coordinates lies on the line segment or not.
 
 #### In the zone
 Calculating whether a point lies on a line segment using linear algebra involves two steps:
