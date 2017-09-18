@@ -173,7 +173,7 @@ calculate the lineVectors and pointVectors by simple vector subtraction. Then, t
 Scalar Product is greater than 0 for both ends of the line segment, this means that the point lies "between" the two ends of the line segment (green point). If this
 is not the case, however, the Scalar Product is smaller than 0 for one of the ends (blue point).
 
-Since we've already implemented basic matrix operations, this makes the calculation quite easy:
+Since we've already implemented basic matrix operations, this makes the method quite easy:
 
 ```java
 private boolean isPointWithinAngle(Vector2D pt) {
@@ -196,7 +196,7 @@ trigonometric functions (Sine in particular) or we could also use the __determin
 ![Determinant:](images/determinant.jpg "Determinant")
 
 For the sake of simplicity I will spare you the details of how to get from the Sine-form to the Determinant-form. As in the problem above, the
-calculation of the determinan is already covered in our common _Vector2D_ class. And again, this makes the caluclation of the distance quite simple:
+calculation of the determinant is already covered in our common _Vector2D_ class. And again, this makes the calculation of the distance quite simple:
  
  ```java
  private boolean isPointInLine(Vector2D pt) {
@@ -208,7 +208,7 @@ calculation of the determinan is already covered in our common _Vector2D_ class.
  ```
  
  Since the value of the determinant could be positive or negative (point is "above" or "below" the line) and we're only interested in the _distance_ (i.e. magnitude), we
- use the _abs_ class-method of the _Math_ class. We also check the distance against our tolerance which is stored as class-variable on the LineSegment class.
+ use the _abs_ class-method of the _Math_ class to get the absolute value. We also check the distance against our tolerance which is stored as class-variable on the _LineSegment class_.
  If the distance is within the tolerance, the method returns __True__, otherwise it returns __False__.
  
  
@@ -229,7 +229,4 @@ operators such as "&&" or "||" is aborted as soon as the overall result is known
 In our particular case this means that _isPointInLine_ (divisions) is only called if _isPointWithinAngle_ (additions) returns __True__. In every other case
 we can safely say that the point __is not__ on the line segment and omit any further calculations involving division.
  
-
-
-
-
+I hope this documentation helps you find your way around Exercise 1.
