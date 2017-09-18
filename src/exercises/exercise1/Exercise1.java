@@ -14,7 +14,7 @@ import java.io.IOException;
 
 import exercises.common.AbstractCanvasExercise;
 import exercises.common.utils.Vector2D;
-import exercises.exercise1.models.Line;
+import exercises.exercise1.models.LineSegment;
 
 /**
  * LinAlg.BSc INF 2015.ZH5-Mo.HS17/18: Exercise 1
@@ -38,7 +38,7 @@ public class Exercise1 extends AbstractCanvasExercise {
     private float thickness = 1.0f;
 
     // References
-    private Line currentLine;
+    private LineSegment currentLine;
 
     private Slider sldTolerance, sldThickness;
     private Label lbTolerance, lbThickness;
@@ -89,7 +89,7 @@ public class Exercise1 extends AbstractCanvasExercise {
                     double x = event.getX();
                     double y = event.getY();
 
-                    currentLine = new Line(x, y, x, y);
+                    currentLine = new LineSegment(x, y, x, y);
                     currentLine.setThickness(thickness);
                     drawables.add(currentLine);
                 }
@@ -167,7 +167,7 @@ public class Exercise1 extends AbstractCanvasExercise {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 lbTolerance.setText(String.format("%.0f px", newValue.floatValue()));
-                Line.tolerance = newValue.floatValue();
+                LineSegment.tolerance = newValue.floatValue();
             }
         });
     }

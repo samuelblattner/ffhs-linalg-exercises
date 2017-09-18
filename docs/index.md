@@ -168,7 +168,7 @@ checking if a given set of coordinates lies on the line segment. As mentioned ea
 that we want to draw on Canvas must implement the ifCanvasDrawable interface. Let's start with how the line is drawn:
 
 #### Drawing lines
-Our _Line_ model implements the _ifCanvasDrawable_ interface and thus the _draw_ method. The draw method is passed a
+Our _LineSegment_ model implements the _ifCanvasDrawable_ interface and thus the _draw_ method. The draw method is passed a
 _GraphicsContext_ object that allows us to draw on a Canvas. So, all we have to do to draw a line instance is to set the line properties and then 
 draw the line using JavaFX built-in functions:
 
@@ -189,9 +189,83 @@ draw the line using JavaFX built-in functions:
 Next, let's check out how we can determine if a given set of coordinates lies on the line or not.
 
 #### In the zone
-Calculating 
+Calculating whether a point lies on a line segment using linear algebra involves two steps:
+1. If you draw a line to the given point from either end of the line segment, make sure that the angle between that new line and the line segment is smaller or equal to 90 degrees. If the point lies anywhere "behind" the line segment's end points, we can already say that this point does not lie on the line segment.
+2. Calculate the distance between the point and the line. If the distance is within our declared tolerance, the point lies on the line.
 
+Let's look at these two steps in detail:
 
+##### 1. Determining angles
+For this purpose we make use of some special properties of the __Scalar Product__ or __Dot Product__ (see: [Dot Product](https://en.wikipedia.org/wiki/Dot_product)) of two vectors:
+- For any two vectors where the angle between them is __smaller than 90 degrees__, the Scalar Product will be __greater than 0__.
+- For any two vectors where the angle between them is __greater than 90 degrees__, the Scalar Product will be __smaller than 0__.
+- For any two vectors where the angle between them is __exactly 90 degrees__, the Scalar Product will be __0__.
+
+Check out the following figure to get a visual idea of how this works:
+
+![Scalar Product:](images/scalar-product.jpg "Scalar Product")
+
+In this example we have a line segment (pink) and we need to find out wheter either of the two points (green and blue) are within angle. In order to do so, we 
+calculate the lineVectors and pointVectors by simple vector subtraction. Then, the Scalar Product between lineVector and pointVector gives us the answer: If the 
+Scalar Product is greater than 0 for both ends of the line segment, this means that the point lies "between" the two ends of the line segment (green point). If this
+is not the case, however, the Scalar Product is smaller than 0 for one of the ends (blue point).
+
+Since we've already implemented basic matrix operations, this makes the calculation quite easy:
+
+```java
+private boolean isPointWithinAngle(Vector2D pt) {
+    Vector2D lineVector1 = pEnd.difference(pStart);
+    Vector2D lineVector2 = pStart.difference(pEnd);
+    Vector2D pointVector1 = pt.difference(pStart);
+    Vector2D pointVector2 = pt.difference(pEnd);
+
+    return lineVector1.scalar(pointVector1) > 0 && lineVector2.scalar(pointVector2) > 0;
+}
+```
+
+The return value of this method is __True__ if both Scalar Products are greater than 0 and thus the point lies between the two line segment ends. The only thing remaining now is to 
+find out _how far_ the point is away from the line segment in order to tell if the point lies on the line segment or not:
+
+##### 2. Distance between point and line
+In order to calculate the distance between a given point and the straight line (which the line segment is part of), we could either use
+trigonometric functions (Sine in particular) or we could also use the __determinant__ of two vectors.
+
+![Determinant:](images/determinant.jpg "Determinant")
+
+For the sake of simplicity I will spare you the details of how to get from the Sine-form to the Determinant-form. As in the problem above, the
+calculation of the determinan is already covered in our common _Vector2D_ class. And again, this makes the caluclation of the distance quite simple:
+ 
+ ```java
+ private boolean isPointInLine(Vector2D pt) {
+     Vector2D lineVector = pEnd.difference(pStart);
+     Vector2D pointVector = pt.difference(pStart);
+
+     return Math.abs(pointVector.determinant(lineVector)) / lineVector.getLength() <= LineSegment.tolerance;
+ }
+ ```
+ 
+ Since the value of the determinant could be positive or negative (point is "above" or "below" the line) and we're only interested in the _distance_ (i.e. magnitude), we
+ use the _abs_ class-method of the _Math_ class. We also check the distance against our tolerance which is stored as class-variable on the LineSegment class.
+ If the distance is within the tolerance, the method returns __True__, otherwise it returns __False__.
+ 
+ 
+ #### Wrapping it up
+ So, now that we know the two steps involved in determining if a point lies on a line segment, we just need to call both methods like so:
+ 
+ ```java
+public boolean isPointInside(Vector2D pt) {
+    return isPointWithinAngle(pt) && isPointInLine(pt);
+}
+```
+
+Notice that I chose the order of the method calls deliberately. If you compare the two methods, you will see that _isPointWithinAngle_ only uses additions whereas
+_isPointInLine_ uses division. Since the CPU is much faster in calculating additions than divisions, it makes sense to call the less expensive method first.
+The JVM (and many other interpreters and compilers) uses a concept called __"Short-Circuit Evaluation"__ which means that the evaluation in a statement with logical 
+operators such as "&&" or "||" is aborted as soon as the overall result is known from the already evaluated components.
+
+In our particular case this means that _isPointInLine_ (divisions) is only called if _isPointWithinAngle_ (additions) returns __True__. In every other case
+we can safely say that the point __is not__ on the line segment and omit any further calculations involving division.
+ 
 
 
 

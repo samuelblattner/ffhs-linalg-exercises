@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
  * Implements basic methods to verify if a given point lies on the line within
  * a specific tolerance.
  */
-public class Line implements ifCanvasDrawable {
+public class LineSegment implements ifCanvasDrawable {
 
     // Statics
     public static float tolerance = 1.0f;
@@ -34,7 +34,7 @@ public class Line implements ifCanvasDrawable {
      * @param x2 X-Coordinate of end point
      * @param y2 Y-Coordinate of end point
      */
-    public Line(double x1, double y1, double x2, double y2) {
+    public LineSegment(double x1, double y1, double x2, double y2) {
         this.pStart = new Vector2D(x1, y1);
         this.pEnd = new Vector2D(x2, y2);
     }
@@ -68,7 +68,7 @@ public class Line implements ifCanvasDrawable {
         Vector2D lineVector = pEnd.difference(pStart);
         Vector2D pointVector = pt.difference(pStart);
 
-        return Math.abs(pointVector.determinant(lineVector)) / lineVector.getLength() <= Line.tolerance;
+        return Math.abs(pointVector.determinant(lineVector)) / lineVector.getLength() <= LineSegment.tolerance;
     }
 
     // ========================== ifCanvasDrawable Methods ===========================
