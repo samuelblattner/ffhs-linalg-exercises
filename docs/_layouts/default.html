@@ -29,14 +29,7 @@
         </section>
         {% endif %}
 
-        {% assign pages = site.navigation | sort:"weight"  %}
-        <nav>
-            <ol>
-                {% for page in pages %}
-                <li><a href="{{page.url | prepend: site.baseurl }}">{{ page.title }}</a></li>
-                {% endfor %}
-            </ol>
-        </nav>
+        {% include navigation.html %}
 
     </header>
 </div>
