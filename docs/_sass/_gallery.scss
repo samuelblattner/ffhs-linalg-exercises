@@ -1,0 +1,20 @@
+.gallery {
+
+  img {
+    margin: 0;
+    padding: 1%;
+  }
+
+  &.gallery-100 {
+    img {
+      width: 97%;
+
+    }
+  }
+
+  &.gallery-50 {
+    img {
+      width: 47%;
+    }
+  }
+}

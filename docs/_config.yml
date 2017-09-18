@@ -1,6 +1,12 @@
 theme: jekyll-theme-slate
 
-title: LinAlg Exercises
-description: Description
+title: Linear Algebra Exercises
+description: This is the documentation for my solutions to the Exercises of the course "Linear Algebra" at the Fernfachhochschule Schweiz (FFHS).
 
 highlighter: rouge
+
+navigation:
+ - title: Introduction
+   url: /index.html
+ - title: Exercise 1
+   url: /exercises/exercise1.html

@@ -1,0 +1,12 @@
+table {
+
+  thead {
+    font-weight: bold;
+  }
+
+  td {
+    &.column-25 {
+      width: 25%;
+    }
+  }
+}
