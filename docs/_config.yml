@@ -12,3 +12,6 @@ navigation:
  - title: Exercise 1
    url: /exercises/exercise1.html
    weight: 1
+ - title: Exercise 2
+   url: /exercises/exercise2.html
+   weight: 1

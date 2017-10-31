@@ -54,3 +54,4 @@ such as calculating its length (i.e. magnitude) or its scalar product, for examp
 Using linear algebra to determine if a given set of coordinates lies on a specific line segment or not.
 
 [Goto Exercise 1 Docs](./exercises/exercise1.html)
+[Goto Exercise 2 Docs](./exercises/exercise2.html)
