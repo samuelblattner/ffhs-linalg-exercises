@@ -29,8 +29,10 @@ public abstract class AbstractExercise implements ifExercise {
     }
 
     protected void initializeExercise(BorderPane container) {
+
         onExerciseInitialized();
     }
 
     protected void onExerciseInitialized() {}
+
 }

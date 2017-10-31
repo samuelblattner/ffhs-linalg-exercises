@@ -1,6 +1,8 @@
 package exercises.exercise1;
 
+import exercises.common.models.World;
 import exercises.common.models.ifCanvasDrawable;
+import exercises.common.utils.OrthogonalScreenProjectionStrategy;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +16,7 @@ import java.io.IOException;
 
 import exercises.common.AbstractCanvasExercise;
 import exercises.common.utils.Vector2D;
-import exercises.exercise1.models.LineSegment;
+import exercises.common.models.LineSegment;
 
 /**
  * LinAlg.BSc INF 2015.ZH5-Mo.HS17/18: Exercise 1
@@ -28,8 +30,8 @@ public class Exercise1 extends AbstractCanvasExercise {
     // Statics
     private static final String EXERCISE_NAME = "«Wohin klickt die Maus?»";
     private static final String EXERCISE_DESC = "Implementieren Sie ein simples Zeichenprogramm mit folgender (minimalen) Funktionalität:\n" +
-                                                "- Das Zeichenprogramm kann Strecken zeichnen durch Dragging der Maus.\n" +
-                                                "- Durch Doppelklick auf eine bereits gezeichnete Strecke wird diese wieder gelöscht.";
+            "- Das Zeichenprogramm kann Strecken zeichnen durch Dragging der Maus.\n" +
+            "- Durch Doppelklick auf eine bereits gezeichnete Strecke wird diese wieder gelöscht.";
 
     private static final String EXERCISE_CONTROLS_PATH = "ui/exercise1-controls.fxml";
 
@@ -39,6 +41,7 @@ public class Exercise1 extends AbstractCanvasExercise {
 
     // References
     private LineSegment currentLine;
+    private World world = new World(new OrthogonalScreenProjectionStrategy());
 
     private Slider sldTolerance, sldThickness;
     private Label lbTolerance, lbThickness;
@@ -48,9 +51,11 @@ public class Exercise1 extends AbstractCanvasExercise {
 
     /**
      * Build the control GUI for this Exercise.
+     *
      * @param container Container to contain the controls
      */
     private void buildGUI(BorderPane container) {
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource(EXERCISE_CONTROLS_PATH));
         try {
             loader.setController(this);
@@ -65,6 +70,7 @@ public class Exercise1 extends AbstractCanvasExercise {
         } catch (IOException e) {
             System.err.format("Unable to load Controls Interface for Exercise 1 (%s).", EXERCISE_CONTROLS_PATH);
         }
+
     }
 
     /**
@@ -89,7 +95,7 @@ public class Exercise1 extends AbstractCanvasExercise {
                     double x = event.getX();
                     double y = event.getY();
 
-                    currentLine = new LineSegment(x, y, x, y);
+                    currentLine = new LineSegment(x, y, x, y, world);
                     currentLine.setThickness(thickness);
                     drawables.add(currentLine);
                 }
@@ -119,7 +125,7 @@ public class Exercise1 extends AbstractCanvasExercise {
             @Override
             public void handle(MouseEvent event) {
                 if (!isDragging) {
-                    for (ifCanvasDrawable drawable: drawables) {
+                    for (ifCanvasDrawable drawable : drawables) {
                         if (drawable.isPointInside(new Vector2D(event.getX(), event.getY()))) {
                             drawable.setSelected(true);
                         } else {
@@ -140,7 +146,7 @@ public class Exercise1 extends AbstractCanvasExercise {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() == 2) {
-                    for (ifCanvasDrawable drawable: drawables) {
+                    for (ifCanvasDrawable drawable : drawables) {
                         if (drawable.isPointInside(new Vector2D(event.getX(), event.getY()))) {
                             drawable.setDeleted(true);
                         }
@@ -155,7 +161,7 @@ public class Exercise1 extends AbstractCanvasExercise {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 lbThickness.setText(String.format("%.0f px", newValue.floatValue()));
-                for (ifCanvasDrawable line: drawables) {
+                for (ifCanvasDrawable line : drawables) {
                     line.setThickness(newValue.floatValue());
                 }
                 thickness = newValue.floatValue();
@@ -173,8 +179,10 @@ public class Exercise1 extends AbstractCanvasExercise {
     }
 
     // ==================== ifExercise Methods ============================
+
     /**
      * Return Exercise Name / Title
+     *
      * @return {String} Exercise Name
      */
     @Override
@@ -184,6 +192,7 @@ public class Exercise1 extends AbstractCanvasExercise {
 
     /**
      * Return Exercise Description.
+     *
      * @return {String} Exercise Description
      */
     @Override

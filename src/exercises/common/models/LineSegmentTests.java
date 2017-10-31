@@ -1,4 +1,4 @@
-package exercises.exercise1.models;
+package exercises.common.models;
 
 import junit.framework.TestCase;
 

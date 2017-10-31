@@ -13,7 +13,7 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("application.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("LinAlg Semestararbeit");
-        primaryStage.setScene(new Scene(root, 1024, 768));
+        primaryStage.setScene(new Scene(root, 1200, 1024));
         primaryStage.show();
         ((ApplicationController) loader.getController()).onApplicationReady();
     }

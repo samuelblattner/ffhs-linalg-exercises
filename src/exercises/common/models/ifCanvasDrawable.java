@@ -12,7 +12,11 @@ import javafx.scene.canvas.GraphicsContext;
  * - check if a given point lies within / on the object (isPointInside).
  */
 public interface ifCanvasDrawable {
+
+    // Drawing
     void draw(GraphicsContext gc);
+
+    // State management
     void setSelected(boolean selected);
     boolean isPointInside(Vector2D pt);
     void setThickness(float thickness);

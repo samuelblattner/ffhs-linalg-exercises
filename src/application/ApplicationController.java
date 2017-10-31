@@ -1,26 +1,31 @@
 package application;
 
 import application.interfaces.ifExercise;
+import exercises.exercise2.Exercise2;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import exercises.exercise1.Exercise1;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import org.omg.CORBA.portable.ApplicationException;
 
 public class ApplicationController {
 
     // Statics
     private static final HashMap<String, Class> EXERCISES = new HashMap<String, Class>();
     private static boolean applicationIsReady = false;
+    private static ArrayList<String> loadedExercises = new ArrayList<String>();
 
     static {
         ApplicationController.EXERCISES.put("EX1", Exercise1.class);
+        ApplicationController.EXERCISES.put("EX2", Exercise2.class);
     }
 
     // References
@@ -39,17 +44,19 @@ public class ApplicationController {
             Tab tab = applicationTabPane.getTabs().get(tabId);
             Class exerciseClass = ApplicationController.EXERCISES.get(tab.getId());
 
-            if (exerciseClass != null) {
+            if (exerciseClass != null && !ApplicationController.loadedExercises.contains(tab.getId())) {
 
                 try {
 
                     GridPane container = (GridPane) tab.getContent();
-                    Label lbTitle = (Label) container.lookup("#lbExerciseName");
-                    Label lbDesc = (Label) container.lookup("#lbExerciseDesc");
+                    Label lbTitle = (Label) container.lookup("#lbExerciseName".concat(String.format("%d", tabId)));
+                    Label lbDesc = (Label) container.lookup("#lbExerciseDesc".concat(String.format("%d", tabId)));
                     ifExercise exercise = (ifExercise) exerciseClass.newInstance();
                     lbTitle.setText(exercise.getExerciseName());
                     lbDesc.setText(exercise.getExerciseDescription());
-                    exercise.load((BorderPane) container.getChildren().get(2));
+                    exercise.load((BorderPane) container.getChildren().get(0));
+
+                    ApplicationController.loadedExercises.add(tab.getId());
 
                 } catch (IllegalAccessException e) {
                     System.err.format("Unable to instantiate class %s. Permission denied.", exerciseClass.toString());
