@@ -67,7 +67,7 @@ the same way.
 However, for our 3D-exercise, we have to create a new model called _FixedPerspectiveCamera_. We will use a simplified 
 projection mechanism. To understand how it works, let's look at the following picture:
 
-![Scalar Product:](images/rays.jpg "Intercept theorem")
+![Scalar Product:](images/rays.png "Intercept theorem")
 
 The theorem of intersecting lines the relation between the real coordinates of the object (blue lines) is exactly the same as
 the relation between the projected X/Y-coordinates and the distance to the projection surface (red lines). 
