@@ -1,5 +1,6 @@
 package exercises.common.models;
 
+import exercises.common.utils.AbstractVector;
 import exercises.common.utils.Vector2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -9,15 +10,6 @@ import javafx.scene.paint.Color;
  * Model for a circle
  */
 public class Circle extends AbstractGeometry2D implements ifCanvasDrawable {
-
-    // Properties
-    private float thickness = 1.0f;
-    private Color color = Color.rgb(0, 0, 0);
-    private Color selectedColor = Color.rgb(29, 255, 213);
-
-    // State
-    private boolean deleted = false;
-    private boolean selected = false;
 
     /**
      * Constructor. Note, that the radii of this oval are
@@ -63,7 +55,7 @@ public class Circle extends AbstractGeometry2D implements ifCanvasDrawable {
     }
 
     @Override
-    public boolean isPointInside(Vector2D pt) {
+    public boolean isPointInside(AbstractVector pt) {
         return false;
     }
 

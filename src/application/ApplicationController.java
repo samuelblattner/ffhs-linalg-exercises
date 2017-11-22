@@ -2,6 +2,7 @@ package application;
 
 import application.interfaces.ifExercise;
 import exercises.exercise2.Exercise2;
+import exercises.exercise3.Exercise3;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -26,6 +27,7 @@ public class ApplicationController {
     static {
         ApplicationController.EXERCISES.put("EX1", Exercise1.class);
         ApplicationController.EXERCISES.put("EX2", Exercise2.class);
+        ApplicationController.EXERCISES.put("EX3", Exercise3.class);
     }
 
     // References
@@ -90,4 +92,5 @@ public class ApplicationController {
 
         initializeTab(applicationTabPane.getTabs().indexOf(tab));
     }
+
 }

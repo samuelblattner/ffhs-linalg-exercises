@@ -113,4 +113,25 @@ public class MatrixTests extends TestCase {
         assertEquals(32.0, matrix1.getValue(0, 1));
         assertEquals(50.0, matrix1.getValue(0, 2));
     }
+
+    public void testMatrixTransposing() {
+        Matrix matrix1 = new Matrix(3,3);
+        matrix1.setValues(
+                1, 2, 3,
+                4, 5, 6,
+                7, 8, 9
+        );
+        Matrix matrix_transposed = matrix1.getTransposed();
+        assertEquals(1.0, matrix_transposed.getValue(0, 0));
+        assertEquals(4.0, matrix_transposed.getValue(1, 0));
+        assertEquals(7.0, matrix_transposed.getValue(2, 0));
+
+        assertEquals(2.0, matrix_transposed.getValue(0, 1));
+        assertEquals(5.0, matrix_transposed.getValue(1, 1));
+        assertEquals(8.0, matrix_transposed.getValue(2, 1));
+
+        assertEquals(3.0, matrix_transposed.getValue(0, 2));
+        assertEquals(6.0, matrix_transposed.getValue(1, 2));
+        assertEquals(9.0, matrix_transposed.getValue(2, 2));
+    }
 }

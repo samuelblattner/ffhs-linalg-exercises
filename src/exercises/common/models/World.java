@@ -11,15 +11,15 @@ public class World {
 
     private TransformationMatrix3D worldTransformMatrix = new TransformationMatrix3D();
     private Vector2D worldScreenCenter = new Vector2D(0, 0);
-    private ifScreenProjectionStrategy screenProjectionStrategy;
+    private AbstractCamera camera;
 
     /**
      * Constructor.
      * @param projectionStrategy
      */
     public World(ifScreenProjectionStrategy projectionStrategy) {
-        this.screenProjectionStrategy = projectionStrategy;
         this.worldTransformMatrix.establishIdentityMatrix();
+        this.camera = new OrthogonalXYCamera(this);
     }
 
     private Vector3D applyWorld(Vector3D localVector) {
@@ -35,6 +35,10 @@ public class World {
      */
     private Vector3D enforce3DVector(AbstractVector vector) {
         return (vector.getNumRows() == 3 ? new Vector3D(vector.getValue(0, 0), vector.getValue(0, 1), 1) : (Vector3D) vector);
+    }
+
+    public void setCamera(AbstractCamera camera) {
+        this.camera = camera;
     }
 
     /**
@@ -57,7 +61,7 @@ public class World {
      * @return {Vector2D} Screen projected vector
      */
     public Vector2D getScreenCoordinates(AbstractVector localVector) {
-        return this.screenProjectionStrategy.projectWorldToScreen(
+        return this.camera.projectWorldToScreen(
                 this.getWorldCoordinates(localVector)).combine(this.worldScreenCenter);
     }
 

@@ -1,5 +1,6 @@
 package exercises.common.models;
 
+import exercises.common.utils.AbstractVector;
 import exercises.common.utils.Vector2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -18,7 +19,7 @@ public interface ifCanvasDrawable {
 
     // State management
     void setSelected(boolean selected);
-    boolean isPointInside(Vector2D pt);
+    boolean isPointInside(AbstractVector pt);
     void setThickness(float thickness);
     void setDeleted(boolean deleted);
     boolean isDeleted();

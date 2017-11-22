@@ -189,6 +189,16 @@ public class Matrix {
         return resultMatrix;
     }
 
+    public Matrix getTransposed() {
+        Matrix inverted = new Matrix(this.getNumRows(), this.getNumCols());
+        for (int c = 0; c < this.getNumCols(); c++) {
+            for (int r = 0; r < this.getNumRows(); r++) {
+                inverted.setValue(r, c, this.getValue(c, r));
+            }
+        }
+        return inverted;
+    }
+
     public void establishIdentityMatrix() {
         for (int c = 0; c < this.getNumCols(); c++) {
             for (int r = 0; r < this.getNumRows(); r++) {

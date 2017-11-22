@@ -1,6 +1,8 @@
 package exercises.common.models;
 
 import exercises.common.utils.*;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +22,21 @@ import java.util.List;
  * Every transformation changes the transformationMatrix.
  *
  */
-public abstract class AbstractGeometry<V extends AbstractVector, M extends AbstractTransformationMatrix> {
+public abstract class AbstractGeometry<V extends AbstractVector, M extends AbstractTransformationMatrix> implements ifCanvasDrawable {
 
     // Relations
     protected World world;
 
     // Properties
     protected List<V> vertices;
+    protected float thickness = 1.0f;
+    protected Color color = Color.rgb(0, 0, 0);
+    protected Color selectedColor = Color.rgb(29, 255, 213);
+
+    // State
+    protected boolean governed = false;
+    protected boolean deleted = false;
+    protected boolean selected = false;
 
     // State
     private boolean locked = false;
@@ -98,7 +108,11 @@ public abstract class AbstractGeometry<V extends AbstractVector, M extends Abstr
      * @return {Vector2D} Screencoordinates of this Vertex.
      */
     public Vector2D getScreenVertex(int vertexIndex) {
-        return this.world.getScreenCoordinates(this.getTransformedVertex(vertexIndex));
+        if (this.governed) {
+            return this.world.getScreenCoordinates(this.getWorldVertex(vertexIndex));
+        } else {
+            return this.world.getScreenCoordinates(this.getTransformedVertex(vertexIndex));
+        }
     }
 
     /**
@@ -112,12 +126,59 @@ public abstract class AbstractGeometry<V extends AbstractVector, M extends Abstr
         this.transformationMatrix = (M) newTransformationMatrix.multiply(this.transformationMatrix, this.getInitialTransformationMatrix());
     }
 
+    public void setTransformationMatrix(M transformationMatrix) {
+        this.transformationMatrix = (M) transformationMatrix;
+    }
+
+    public M getTransformationMatrix() {
+        return this.transformationMatrix;
+    }
+
     /**
      * Resets this object's transformation to initial state (no transformation).
      */
     public void resetTransformation() {
         this.transformationMatrix.establishIdentityMatrix();
     }
+
+    /**
+     * Getter for deletion state
+     * @return {boolean} True if deleted
+     */
+    @Override
+    public boolean isDeleted() {
+        return this.deleted;
+    }
+
+
+    @Override
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    @Override
+    public void setThickness(float thickness) {
+        if (thickness > 0) {
+            this.thickness = thickness;
+        }
+    }
+
+    @Override
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    @Override
+    public boolean isPointInside(AbstractVector vector) {
+        return false;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    @Override
+    public void draw(GraphicsContext gc) {}
 
     public abstract V getTransformedVertex(int vertexIndex);
     public abstract M getInitialTransformationMatrix();

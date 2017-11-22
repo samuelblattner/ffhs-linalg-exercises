@@ -1,9 +1,8 @@
 package exercises.common.models;
 
-import exercises.common.utils.Matrix;
 import exercises.common.utils.Vector2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+
 
 /**
  * Line model representing a straight line defined by two vectors ``pStart`` and ``pEnd``.
@@ -16,15 +15,6 @@ public class LineSegment extends AbstractGeometry2D implements ifCanvasDrawable 
 
     // Statics
     public static float tolerance = 1.0f;
-
-    // Properties
-    private float thickness = 1.0f;
-    private Color color = Color.rgb(0, 0, 0);
-    private Color selectedColor = Color.rgb(29, 255, 213);
-
-    // State
-    private boolean deleted = false;
-    private boolean selected = false;
 
     /**
      * Constructor.
@@ -92,7 +82,6 @@ public class LineSegment extends AbstractGeometry2D implements ifCanvasDrawable 
      * @param pt Vector2D point to check
      * @return True if point lies on line.
      */
-    @Override
     public boolean isPointInside(Vector2D pt) {
         return isPointWithinAngle(pt) && isPointInLine(pt);
     }
@@ -117,47 +106,25 @@ public class LineSegment extends AbstractGeometry2D implements ifCanvasDrawable 
         );
     }
 
-    @Override
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-    }
-
+    /**
+     * Set the start point of this line.
+     * @param x {double} x-coordinate
+     * @param y {double} y-coordinate
+     */
     public void setStartCoordinates(double x, double y) {
         Vector2D pStart = this.getLocalVertex(0);
         pStart.setValue(0, 0, x);
         pStart.setValue(0, 1, y);
     }
 
+    /**
+     * Set the end point of this line.
+     * @param x {double} x-coordinate
+     * @param y {double} y-coordinate
+     */
     public void setEndCoordinates(double x, double y) {
         Vector2D pEnd = this.getLocalVertex(1);
         pEnd.setValue(0, 0, x);
         pEnd.setValue(0, 1, y);
     }
-
-    /**
-     * Setter for line color.
-     * @param newColor {Color} New line color to be set.
-     */
-    public void setColor(Color newColor) {
-        this.color = newColor;
-    }
-
-    /**
-     * Setter for line thickness.
-     * @param thickness {float} New line thickness (only values > 0)
-     */
-    public void setThickness(float thickness) {
-        if (thickness > 0) {
-            this.thickness = thickness;
-        }
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    public boolean isDeleted() {
-        return this.deleted;
-    }
-
 }
