@@ -55,3 +55,4 @@ Using linear algebra to determine if a given set of coordinates lies on a specif
 
 [Goto Exercise 1 Docs](./exercises/exercise1.html)
 [Goto Exercise 2 Docs](./exercises/exercise2.html)
+[Goto Exercise 3 Docs](./exercises/exercise3.html)
