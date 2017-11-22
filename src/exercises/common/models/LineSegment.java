@@ -1,5 +1,6 @@
 package exercises.common.models;
 
+import exercises.common.utils.AbstractVector;
 import exercises.common.utils.Vector2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -82,8 +83,8 @@ public class LineSegment extends AbstractGeometry2D implements ifCanvasDrawable 
      * @param pt Vector2D point to check
      * @return True if point lies on line.
      */
-    public boolean isPointInside(Vector2D pt) {
-        return isPointWithinAngle(pt) && isPointInLine(pt);
+    public boolean isPointInside(AbstractVector pt) {
+        return isPointWithinAngle((Vector2D) pt) && isPointInLine((Vector2D)  pt);
     }
 
     /**
