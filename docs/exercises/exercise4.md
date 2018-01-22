@@ -51,7 +51,7 @@ will change into another. Let's assume that in the beginning, our system is in s
 
 $$
 
-\vec{s} = \begin{bmatrix}1\\0\\0\end{bmatrix}, M=
+\vec{s}(0) = \begin{bmatrix}1\\0\\0\end{bmatrix}, M=
 \begin{bmatrix}
     0   & 0   & 0.8 \\ 
     0.7 & 0.7 & 0   \\
@@ -60,7 +60,7 @@ $$
 
 $$
 
-As you can see, the columns represent the states $$S_{1}$$ to $$S_{3}$$ where we start at, and the rows represent the
+As you can see, the columns of matrix $$M$$ represent the states $$S_{1}$$ to $$S_{3}$$ where we start at, and the rows represent the
 states $$S_{1}$$ to $$S_{3}$$ where we want to go to. So, if we multiply our transformation matrix $$M$$ with our
 initial state vector $$\vec{s}(0)$$, we'll get the following outcome:
 
@@ -72,6 +72,8 @@ $$
                                       0.3 & 0.3 & 0.2 \\
                                   \end{bmatrix} \cdot \begin{bmatrix}1\\0\\0\end{bmatrix} = 
                                   \begin{bmatrix}0\\0.7\\0.3\end{bmatrix}
+                                  
+$$
 
 ### Basic principle of the Page Rank Algorithm
 
