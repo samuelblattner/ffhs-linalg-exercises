@@ -115,12 +115,14 @@ $$
 The interesting question now of course is: What happens if we continue the iterations eternally, i.e. how will the 
 resulting state behave for $$n=\infty$$? The following diagram shows the results for various values for $$n$$:
  
-![State Changes](images/ex4_state_iterations.png "State diagram"){:width="40%"}
+![State Changes](images/ex4_state_iterations.png "State diagram"){:width="80%"}
 
 As you can easily see, the probabilities for the individual states converge to a value in which the system is «stable»
 where it will stay, no matter how many more iterations will follow.
 
 ### Basic principle of the Page Rank Algorithm
+Now that we have a basic understanding of the Markov-Matrix, let's dig into the mechanics of the Page Rank Algorithm.
+Let's assume that we have four web pages
 
 ### Summary
 
