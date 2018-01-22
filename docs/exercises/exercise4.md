@@ -39,7 +39,7 @@ state-transformation matrix which holds the weights of an adjacency graph. And e
 with which the described system will change its current state to another. Let's have a look at the following image to
 get a clearer picture:
 
-![State Changes](images/ex4_state_changes.png "State diagram"){:width="60%"}
+![State Changes](images/ex4_state_changes.png "State diagram"){:width="40%"}
 
 This diagram shows three stages $$ S_{1}, S_{2} $$ and $$ S_{3} $$. The weights of the graph show the probabilities of
 every state to change into another. $$S_{2} $$ and $$S_{3}$$ can stay unchanged, whereas $$S_{1}$$ will always change
@@ -73,6 +73,43 @@ $$
                                   \end{bmatrix} \cdot \begin{bmatrix}1\\0\\0\end{bmatrix} = 
                                   \begin{bmatrix}0\\0.7\\0.3\end{bmatrix}
                                   
+$$
+
+In other words: after one iteration (in practice, an iteration could represent one hour, one day or any other unit 
+describing the interval of one state change), our system will be in state $$S_{2}$$ with a 70% chance, or in the state
+ $$S_{3}$$ with a 30% chance.
+ 
+How would be account for 3 iterations? Simple:
+
+$$
+
+\vec{s}(3) = M \cdot \vec{s}(0) = \begin{bmatrix}
+                                      0   & 0   & 0.8 \\ 
+                                      0.7 & 0.7 & 0   \\
+                                      0.3 & 0.3 & 0.2 \\
+                                  \end{bmatrix} \cdot (
+                                  \begin{bmatrix}
+                                      0   & 0   & 0.8 \\ 
+                                      0.7 & 0.7 & 0   \\
+                                      0.3 & 0.3 & 0.2 \\
+                                  \end{bmatrix} \cdot (
+                                  \begin{bmatrix}
+                                      0   & 0   & 0.8 \\ 
+                                      0.7 & 0.7 & 0   \\
+                                      0.3 & 0.3 & 0.2 \\
+                                  \end{bmatrix} \cdot \begin{bmatrix}1\\0\\0\end{bmatrix}
+                                  )) = 
+                                  \begin{bmatrix}0.216\\0.511\\0.273\end{bmatrix}
+                                  
+$$
+
+After 3 iterations, we'll find ourselves in state $$S_{1}$$ with a 22% chance, in state $$S_{2}$$ with a 51% chance and
+in state $$S_{3}$$ with a 27% chance. In a more general context we can write:
+
+$$
+
+\vec{s}(n) = M \cdot (M \cdot (... \cdot (M \cdot \vec{s}(0)))) = M^{n} \cdot \vec{s}(0)
+
 $$
 
 ### Basic principle of the Page Rank Algorithm
