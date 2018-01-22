@@ -41,6 +41,37 @@ get a clearer picture:
 
 ![State Changes](images/ex4_state_changes.png "State diagram"){:width="80%"}
 
+This diagram shows three stages $$ S_{1}, S_{2} $$ and $$ S_{3} $$. The weights of the graph show the probabilities of
+every state to change into another. $$S_{2} $$ and $$S_{3}$$ can stay unchanged, whereas $$S_{1}$$ will always change
+into another state. The outbound weigths of every state sum up to 1.
+
+Now, if we were to represent this model, we can use a vector $$\vec{s}$$ to represent the probability in which state we
+find ourselves at this very moment, and use an nxn matrix to represent the probabilities with which the current state 
+will change into another. Let's assume that in the beginning, our system is in state $$S_{1}$$:
+
+$$
+
+\vec{s} = \begin{bmatrix}1\\0\\0\end{bmatrix}, M=
+\begin{bmatrix}
+    0   & 0   & 0.8 \\ 
+    0.7 & 0.7 & 0   \\
+    0.3 & 0.3 & 0.2 \\
+\end{bmatrix
+
+$$
+
+As you can see, the columns represent the states $$S_{1}$$ to $$S_{3}$$ where we start at, and the rows represent the
+states $$S_{1}$$ to $$S_{3}$$ where we want to go to. So, if we multiply our transformation matrix $$M$$ with our
+initial state vector $$\vec{s}(0)$$, we'll get the following outcome:
+
+$$
+
+\vec{s}(1) = M \cdot \vec{s}(0) = \begin{bmatrix}
+                                      0   & 0   & 0.8 \\ 
+                                      0.7 & 0.7 & 0   \\
+                                      0.3 & 0.3 & 0.2 \\
+                                  \end{bmatrix \cdot \begin{bmatrix}1\\0\\0\end{bmatrix} = 
+                                  \begin{bmatrix}0\\0.7\\0.3\end{bmatrix}
 
 ### Basic principle of the Page Rank Algorithm
 
