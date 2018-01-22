@@ -14,7 +14,11 @@ In this article we'll cover the mechanics of the algorithm itself and some mathe
 In order to better understand the mathematics behind, we need to cover a topic called «Eigenvalue/Eigenvector» first. 
 Let's assume we have the following Matrix:
 
-$\begin{bmatrix}1 & 2 \\ 3 & 4\end{bmatrix}$
+$$ 
+
+\begin{bmatrix}1 & 2 \\ 3 & 4\end{bmatrix}
+
+$$
 
 
 ### The Markov-Chain
