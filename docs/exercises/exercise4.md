@@ -39,7 +39,7 @@ state-transformation matrix which holds the weights of an adjacency graph. And e
 with which the described system will change its current state to another. Let's have a look at the following image to
 get a clearer picture:
 
-![State Changes](images/ex4_state_changes.png "State diagram"){:width="80%"}
+![State Changes](images/ex4_state_changes.png "State diagram"){:width="60%"}
 
 This diagram shows three stages $$ S_{1}, S_{2} $$ and $$ S_{3} $$. The weights of the graph show the probabilities of
 every state to change into another. $$S_{2} $$ and $$S_{3}$$ can stay unchanged, whereas $$S_{1}$$ will always change
@@ -56,7 +56,7 @@ $$
     0   & 0   & 0.8 \\ 
     0.7 & 0.7 & 0   \\
     0.3 & 0.3 & 0.2 \\
-\end{bmatrix
+\end{bmatrix}
 
 $$
 
@@ -70,7 +70,7 @@ $$
                                       0   & 0   & 0.8 \\ 
                                       0.7 & 0.7 & 0   \\
                                       0.3 & 0.3 & 0.2 \\
-                                  \end{bmatrix \cdot \begin{bmatrix}1\\0\\0\end{bmatrix} = 
+                                  \end{bmatrix} \cdot \begin{bmatrix}1\\0\\0\end{bmatrix} = 
                                   \begin{bmatrix}0\\0.7\\0.3\end{bmatrix}
 
 ### Basic principle of the Page Rank Algorithm
