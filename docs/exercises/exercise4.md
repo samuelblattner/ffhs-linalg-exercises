@@ -16,7 +16,16 @@ Let's assume we have the following Matrix:
 
 $$ 
 
-\begin{bmatrix}1 & 2 \\ 3 & 4\end{bmatrix}
+A=\begin{bmatrix}1 & 2 \\ 3 & 4\end{bmatrix}
+
+$$
+
+Now, if we have a vector $$\vec{x}$$ which is not the null vector, then the following equation with the Eigenvalue 
+represented by $$\lambda$$ must be valid:
+  
+$$
+
+A\vec{x}=\lambda\vec{x}
 
 $$
 
