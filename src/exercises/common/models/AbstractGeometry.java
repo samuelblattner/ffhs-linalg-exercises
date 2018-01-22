@@ -123,7 +123,8 @@ public abstract class AbstractGeometry<V extends AbstractVector, M extends Abstr
         if (this.locked) {
             return;
         }
-        this.transformationMatrix = (M) newTransformationMatrix.multiply(this.transformationMatrix, this.getInitialTransformationMatrix());
+//        this.transformationMatrix = (M) newTransformationMatrix.multiply(this.transformationMatrix, this.getInitialTransformationMatrix());
+        this.transformationMatrix =(M) this.transformationMatrix.multiply(newTransformationMatrix, this.getInitialTransformationMatrix());
     }
 
     public void setTransformationMatrix(M transformationMatrix) {

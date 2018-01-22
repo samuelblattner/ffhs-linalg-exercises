@@ -378,9 +378,9 @@ public class Exercise3 extends AbstractCanvasExercise {
     private void applyTransformation() {
 
         TransformationMatrix3D raMatrix = this.rotationAxis.getTransformationMatrix();
-        TransformationMatrix3D finalTransformation = (TransformationMatrix3D) raMatrix
+        TransformationMatrix3D finalTransformation = (TransformationMatrix3D) raMatrix.getTransposed()
                 .multiply(userTransformationMatrix, TransformationMatrix3D.createIdentityMatrix())
-                .multiply(raMatrix.getTransposed(), TransformationMatrix3D.createIdentityMatrix());
+                .multiply(raMatrix, TransformationMatrix3D.createIdentityMatrix());
 
 
         for (ifCanvasDrawable geom : drawables) {
