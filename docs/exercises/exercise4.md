@@ -29,8 +29,18 @@ A\vec{x}=\lambda\vec{x}
 
 $$
 
+What is this good for? Well, imagine you have a square matrix of a million columns by a million rows – have fun 
+multiplying this monster with a vector. The neat thing about Eigenvalues is that you can represent the whole Matrix with
+just one scalar. And then do the multiplication with its corresponding Eigenvector instead. 
 
 ### The Markov-Chain
+Equally essential to the understanding of the Page Rank Algorithm is the so-called «Markov-Chain». It describes a 
+state-transformation matrix which holds the weights of an adjacency graph. And every weight represents the probability
+with which the described system will change its current state to another. Let's have a look at the following image to
+get a clearer picture:
+
+![State Changes](images/ex4_state_changes.png "State diagram"){:width="80%"}
+
 
 ### Basic principle of the Page Rank Algorithm
 
