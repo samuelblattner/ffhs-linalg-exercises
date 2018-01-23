@@ -136,7 +136,7 @@ $$
  & \begin{array}{ccccc} W_{1} & W_{2} & W_{3} & W_{4} & W_{5} \end{array} \\
  \begin{array}{c} W_{1} \\ W_{2} \\ W_{3} \\ W_{4} \\ W_{5} \end{array} &
   \left(\begin{array}{ccccc}
-    0 & 0 & 0 & 0 & 0 \\
+    0 & \quad 0 & \quad 0 & \quad 0 & \quad 0 \\
     1 & 0 & 0 & 0 & 0 \\
     1 & 1 & 0 & 0 & 1 \\
     0 & 0 & 1 & 0 & 0 \\
