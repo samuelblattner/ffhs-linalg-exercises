@@ -122,7 +122,27 @@ where it will stay, no matter how many more iterations will follow.
 
 ### Basic principle of the Page Rank Algorithm
 Now that we have a basic understanding of the Markov-Matrix, let's dig into the mechanics of the Page Rank Algorithm.
-Let's assume that we have four web pages
+Let's assume that we have five web pages $$W_{1}$$ to $$W_{5}$$ like so:
+
+![State Changes](images/ex4_websites1.png "State diagram"){:width="60%"}
+
+Notice, that this describes a directed graph with the arrows representing hyperlinks to another web page. From this, we
+can derive the following adjacency matrix:
+
+$$
+    \bordermatrix{
+            & W_{1} & W_{2} & W_{3} & W_{4} & W_{5} \cr
+      W_{1} &    0  &    0  &    0  &    0  &    0  \cr
+      W_{2} &    1  &    0  &    0  &    0  &    0  \cr
+      W_{3} &    1  &    1  &    0  &    0  &    1  \cr
+      W_{4} &    0  &    0  &    1  &    0  &    0  \cr
+      W_{5} &    0  &    0  &    0  &    0  &    0}
+$$
+
+The basic concept behind the algorithm is to let every web page give their votes for other pages by mentioning them in a
+hyperlink. So, the more pages link to a specific page the higher this page gets weighed, i.e. «ranked». If we define that
+every page has an initial weight of 1 and that every inbound link increases that weight by 1, then our diagram would
+look the following.
 
 ### Summary
 
