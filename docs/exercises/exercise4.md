@@ -124,23 +124,23 @@ where it will stay, no matter how many more iterations will follow.
 Now that we have a basic understanding of the Markov-Matrix, let's dig into the mechanics of the Page Rank Algorithm.
 Let's assume that we have five web pages $$W_{1}$$ to $$W_{5}$$ like so:
 
-![State Changes](images/ex4_websites1.png "State diagram"){:width="60%"}
+![State Changes](images/ex4_websites1.png "State diagram"){:width="40%"}
 
 Notice, that this describes a directed graph with the arrows representing hyperlinks to another web page. From this, we
 can derive the following adjacency matrix:
 
 $$
-    
+    M = 
 \begin{array}{cc}
  
  & \begin{array}{ccccc} W_{1} & W_{2} & W_{3} & W_{4} & W_{5} \end{array} \\
  \begin{array}{c} W_{1} \\ W_{2} \\ W_{3} \\ W_{4} \\ W_{5} \end{array} &
   \left(\begin{array}{ccccc}
-    0 & \quad 0 & \quad 0 & \quad 0 & 0 \\
-    1 & \quad 0 & \quad 0 & \quad 0 & 0 \\
-    1 & \quad 1 & \quad 0 & \quad 0 & 1 \\
-    0 & \quad 0 & \quad 1 & \quad 0 & 0 \\
-    0 & \quad 0 & \quad 0 & \quad 0 & 0 
+    0 & \quad 0 & \quad 0 & \quad 0 & \quad 0 \\
+    1 & \quad 0 & \quad 0 & \quad 0 & \quad 0 \\
+    1 & \quad 1 & \quad 0 & \quad 0 & \quad 1 \\
+    0 & \quad 0 & \quad 1 & \quad 0 & \quad 0 \\
+    0 & \quad 0 & \quad 0 & \quad 0 & \quad 0 
   \end{array}\right)
 \end{array}
       
@@ -150,6 +150,98 @@ The basic concept behind the algorithm is to let every web page give their votes
 hyperlink. So, the more pages link to a specific page the higher this page gets weighed, i.e. «ranked». If we define that
 every page has an initial weight of 1 and that every inbound link increases that weight by 1, then our diagram would
 look the following.
+
+![State Changes](images/ex4_websites2.png "State diagram"){:width="40%"}
+
+Currently, if we put this situation into an equation to calculate the weight of one specific page, we would get:
+
+$$ w_{i} = \sum_{j=1}^{n} M_{ij} $$
+
+However, this setup would be very easy to manipulate just by adding a ton of links to a page pointing to the web page 
+for which you want to have a good rating. In order to eliminate this flaw, we give every page a total vote of 1 which 
+it distributes evenly over all outbound links: 
+
+$$ w_{i} = \sum_{j=1}^{n} \frac{M_{ij}}{n_{j}} $$
+
+whereas $$n_{j}$$ represents the number of links on page $$j$$. So, on pages that have hunders of links (e.g. indexing
+pages) a link to your page is literally «worth less» than a link from a page with only three links in total.
+
+Still, one could create numberous individual pages with just one link and then point these pages to the page that should
+get a lot of votes. In order to mitigate this risk, one further measure is added to the equation: the weight of the
+issuing page itself:
+
+$$ w_{i} = \sum_{j=1}^{n} \frac{M_{ij}}{n_{j}} \cdot w_{j} $$
+
+Put into words, this means: The more votes a specific page has, i.e. the more popular a page is, the higher the value
+of votes it gives to other pages.
+Now, the formula above creates sort of a circular dependency because we are calculating the weight $$w_{i}$$ from 
+another weight $$w_{j}$$. But how and when is the weight $$w_{j}$$ calculated? Well, from another weight. But ... where
+does this chain start? It starts at every page having the initial weight of 1. Then, we use a Markov-Chain to develop
+the weights iteration by iteration. It's as if we had a block of stone and we use sand paper to grind it down to a
+sculpture. And the finished sculpture represents the «stable» state of our system.
+
+Now, we know from the previous section that somewhere in eternety, our Markov-Chain will end up in this perfect 
+equilibrium, where nothing has to be added or removed anymore and where the input state corresponds to the output state.
+This is represented by the Eigenvalue-equation:
+
+$$
+
+A\vec{w}=\lambda\vec{w}
+
+$$
+
+If we were to calculate the corresponding Eigenvector (to Eigenvalue of 1) then we could just go ahead and resolve the
+following system of linear equations:
+
+$$
+
+(A - \mathbb{I})\vec{w} = 0 
+ 
+$$
+
+But we must not forget that today, there are millions if not billions of web pages out there. Which means that we would
+have to solve a system of that number of equations (which probably could be efficient with quantum computers...). So
+ instead, we use the approximation by iteration we showed with the Markov-Chain:
+ 
+$$
+
+\vec{w}(n) = M^{n} \cdot \vec{w}(0)
+
+$$
+
+Let's go back to our initial adjacency matrix and execute that iteration to see what happens. First, we need to adapt 
+the matrix to contain partial votes:
+
+$$
+    M = 
+\begin{array}{cc}
+ 
+ & \begin{array}{ccccc} W_{1} & W_{2} & W_{3} & W_{4} & W_{5} \end{array} \\
+ \begin{array}{c} W_{1} \\ W_{2} \\ W_{3} \\ W_{4} \\ W_{5} \end{array} &
+  \left(\begin{array}{ccccc}
+    0 & \quad 0 & \quad 0 & \quad 0 & \quad 0 \\
+    0.5 & \quad 0 & \quad 0 & \quad 0 & \quad 0 \\
+    0.5 & \quad 1 & \quad 0 & \quad 0 & \quad 1 \\
+    0 & \quad 0 & \quad 1 & \quad 0 & \quad 0 \\
+    0 & \quad 0 & \quad 0 & \quad 0 & \quad 0 
+  \end{array}\right)
+\end{array}
+      
+$$
+
+Our initial state vector $$\vec{w}(0)$$ is:
+
+$$
+
+\vec{w}(0) = \begin{bmatrix}
+                1 \\ 1 \\ 1 \\ 1 \\ 1
+             \end{bmatrix}
+             
+$$
+
+
+
+### Demonstrating the Page Rank Algorithm
 
 ### Summary
 
