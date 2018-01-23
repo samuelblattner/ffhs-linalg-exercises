@@ -130,13 +130,19 @@ Notice, that this describes a directed graph with the arrows representing hyperl
 can derive the following adjacency matrix:
 
 $$
-    \bordermatrix{
-            & W_{1} & W_{2} & W_{3} & W_{4} & W_{5} \cr
-      W_{1} &    0  &    0  &    0  &    0  &    0  \cr
-      W_{2} &    1  &    0  &    0  &    0  &    0  \cr
-      W_{3} &    1  &    1  &    0  &    0  &    1  \cr
-      W_{4} &    0  &    0  &    1  &    0  &    0  \cr
-      W_{5} &    0  &    0  &    0  &    0  &    0}
+    
+\begin{array}{cccccc}
+ & W_{1} & W_{2} & W_{3} & W_{4} & W_{5} \\
+ \begin{array}{c} W_{1} \\ W_{2} \\ W_{3} \\ W_{4} \\ W_{5} \end{array} &
+  \left(\begin{array}{ccccc}
+    0 & 0 & 0 & 0 & 0 \\
+    1 & 0 & 0 & 0 & 0 \\
+    1 & 1 & 0 & 0 & 1 \\
+    0 & 0 & 1 & 0 & 0 \\
+    0 & 0 & 0 & 0 & 0 
+  \end{array}\right)
+\end{array}
+      
 $$
 
 The basic concept behind the algorithm is to let every web page give their votes for other pages by mentioning them in a
