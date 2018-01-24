@@ -4,35 +4,35 @@ import numpy as np
 
 PAGES = {
     'grumpy-cats': {
-        'name': 'Grumpy Cats',
+        'title': 'Grumpy Cats',
         'links-to': (
-            'best-three-cat-sites',
+            # 'best-three-cat-sites',
         )
     },
     'fluffy-cats': {
-        'name': 'Fluffy Cats',
+        'title': 'Fluffy Cats',
         'links-to': (
             'best-three-cat-sites',
         )
     },
     'just-lol-cats': {
-        'name': 'Just Lol-Cats',
+        'title': 'Just Lol-Cats',
         'links-to': (
             'cat-videos',
             'best-three-cat-sites',
         )
     },
     'cat-videos': {
-        'name': 'Best cat videos on the planet',
+        'title': 'Best cat videos on the planet',
         'links-to': (
             'grumpy-cats',
             'best-three-cat-sites'
         )
     },
     'best-three-cat-sites': {
-        'name': 'The three best cat sites',
+        'title': 'The three best cat sites',
         'links-to': (
-            'grumpy-cats',
+            # 'grumpy-cats',
             'fluffy-cats',
             'just-lol-cats'
         )
@@ -49,10 +49,6 @@ class PageRanker:
     Simple class to demonstrate the Page Rank Algorithm.
     """
 
-    __adj_graph = None
-    __weights = None
-    __unit_vec = None
-
     @staticmethod
     def __fixed_length_string(text, length):
         """
@@ -63,14 +59,12 @@ class PageRanker:
         """
         return '{}{}'.format(text, ' ' * (length - len(text)))
 
-    def __build_initial_vector(self):
-        """
-        Build the initial vector (all page weights = 1), and a unit vector
-        """
-        self.__weights = np.matrix([[1] for _ in PAGES.keys()])
-        self.__unit_vec = np.matrix([[1] for _ in PAGES.keys()])
+    @staticmethod
+    def __build_unit_vector(dimensions):
+        return np.matrix([[1] for _ in range(0, dimensions)])
 
-    def __build_adjacency_graph(self):
+    @staticmethod
+    def __build_adjacency_graph():
         """
         Build an adjacency matrix out of the page information provided
         in the PAGES static dictionary.
@@ -90,9 +84,10 @@ class PageRanker:
 
             matrix_rows.append(row)
 
-        self.__adj_graph = np.matrix(matrix_rows)
+        return np.matrix(matrix_rows)
 
-    def __print_results(self):
+    @classmethod
+    def __print_results(cls, result_vec):
         """
         Print the resulting weight vector.
         """
@@ -103,12 +98,12 @@ class PageRanker:
             '=' * len(RESULT_DISPLAY_HEADER)
         ))
 
-        longest_page_name = max([len(info.get('name', '')) for _, info in PAGES.items()])
+        longest_page_name = max([len(info.get('title', '')) for _, info in PAGES.items()])
 
         # Print table header
         table_header = '{}{}   {}'.format(
             'Rank  ',
-            self.__fixed_length_string(RESULT_TABLE_PAGE_LABEL, longest_page_name),
+            cls.__fixed_length_string(RESULT_TABLE_PAGE_LABEL, longest_page_name),
             RESULT_TABLE_RANK_VALUE_LABEL
         )
         print('{}\n{}'.format(
@@ -119,32 +114,33 @@ class PageRanker:
         # Create rank rows
         for i, (page_info, rank_value) in enumerate(sorted(zip(
                     PAGES.values(),
-                    self.__weights.getA1()
+                    result_vec.getA1()
                 ), key=lambda t: t[1], reverse=True)):
 
-            page_name = page_info.get('name', '')
+            page_name = page_info.get('title', '')
 
             print('{}{}   {}'.format(
-                self.__fixed_length_string(str(i + 1), len('Rank  ')),
+                cls.__fixed_length_string(str(i + 1), len('Rank  ')),
                 '{}{}'.format(page_name, ' ' * (longest_page_name - len(page_name))),
                 rank_value))
 
         # Print bottom padding
         print(' ')
 
-    def execute_pageranking(self, iterations=500, damping=0.85):
+    @classmethod
+    def execute_pageranking(cls, k=1000, d=1):
         """
         Execute the page ranking iterations.
-        :param iterations: {int} Number of iterations to perform
-        :param damping: {float} Damping factor
+        :param k: {int} Number of iterations to perform
+        :param d: {float} Damping factor
         """
-        self.__build_initial_vector()
-        self.__build_adjacency_graph()
+        unit_vec = cls.__build_unit_vector(len(PAGES.keys()))
+        w = cls.__build_unit_vector(len(PAGES.keys()))
+        adj = cls.__build_adjacency_graph()
 
-        self.__weights = (1 - damping) * sum([damping**j * self.__adj_graph**j * self.__unit_vec for j in range(0, iterations - 1)]) + damping**iterations * self.__adj_graph**iterations * self.__weights
+        result_vec = (1 - d) * sum([d ** j * adj ** j * unit_vec for j in range(0, k - 1)]) + d ** k * adj ** k * w
 
-        self.__print_results()
+        cls.__print_results(result_vec)
 
 
-pr = PageRanker()
-pr.execute_pageranking()
+PageRanker.execute_pageranking()

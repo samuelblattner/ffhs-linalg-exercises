@@ -298,18 +298,207 @@ First, let's define a dictionary that holds the descriptions of our web pages:
 
 ```python
 PAGES = {
-    'funny-cat-pictures': {
+    'grumpy-cats': {
+        'title': 'Grumpy Cats',
         'links-to': (
-            '
+            'best-three-cat-sites',
         )
     },
-    'fakenews-of-the-day': {
+    'fluffy-cats': {
+        'title': 'Fluffy Cats',
         'links-to': (
+            'best-three-cat-sites',
         )
-        
-)
-    
+    },
+    'just-lol-cats': {
+        'title': 'Just Lol-Cats',
+        'links-to': (
+            'cat-videos',
+            'best-three-cat-sites',
+        )
+    },
+    'cat-videos': {
+        'title': 'Best cat videos on the planet',
+        'links-to': (
+            'grumpy-cats',
+            'best-three-cat-sites'
+        )
+    },
+    'best-three-cat-sites': {
+        'title': 'The three best cat sites',
+        'links-to': (
+            'grumpy-cats',
+            'fluffy-cats',
+            'just-lol-cats'
+        )
+    }
+}
 ```
+
+Next, we define a _PageRanker_ class to unify all functionality related to our calculations. In order to calculate the
+page rank of our page defined above, we simply call the class method _execute_pageranking()_. Let's look at what this
+method does:
+
+```python
+@classmethod
+def execute_pageranking(cls, k=500, d=0.85):
+
+    unit_vec = cls.__build_unit_vector(len(PAGES.keys()))
+    w = cls.__build_unit_vector(len(PAGES.keys()))
+    adj = cls.__build_adjacency_graph()
+
+    result_vec = (1 - d) * sum([d ** j * adj ** j * unit_vec for j in range(0, k - 1)]) + d ** k * adj ** k * w
+
+    cls.__print_results(result_vec)
+```
+
+Obviously, our formula is on the second last line of this code snippet. Before we run it, we create a unit vector 
+_unit_vec_ with the number of dimensions set to the number of pages. The _w_ vector will be exactly the same, with the
+only difference that it changes over the course of the iterations whereas _unit_vec_ is going to stay the same and
+provide a constant source of «link juice» to keep our graph alive. The _adj_ field will hold our Markov-adjacency matrix.
+We will see how it's built shortly. The last method call is self-explanatory.
+
+After the iterations, the _result_vec_ field will hold an approximation of the Eigenvector, or in other words, 
+the «balanced» score of our graph.
+
+The ___build_adjacency_graph_ method looks like this:
+
+```python
+@staticmethod
+def __build_adjacency_graph():
+
+    matrix_rows = []
+
+    for tp, (tp_id, tp_info) in enumerate(PAGES.items()):
+
+        row = [0] * len(PAGES.keys())
+
+        for sp, (sp_id, sp_info) in enumerate(PAGES.items()):
+
+            outbound_links = sp_info.get('links-to', ())
+            if tp_id in outbound_links:
+                row[sp] = 1.0 / len(outbound_links)
+
+        matrix_rows.append(row)
+
+    return np.matrix(matrix_rows)
+```
+
+The first loop iterates over our _target pages_, i.e. the matrix' rows. In order to fill one row, a second loop 
+iterates over the _source pages_ from where the links emerge. If the links defined in the source page contain our
+current target page, the partial vote value is calculated by dividing 1 by the total number of links on the source page
+and storing the value in the corresponding column.
+
+With the default settings of 50 iterations and a damping factor of 0.85, the algorithm will give us:
+
+```python
+Page Rank Results:
+==================
+
+Rank  Page name                       Page rank value
+-----------------------------------------------------
+1     The three best cat sites        2.09990987303
+2     Grumpy Cats                     0.943278777045
+3     Just Lol-Cats                   0.744970935429
+4     Fluffy Cats                     0.744970935429
+5     Best cat videos on the planet   0.466608510247
+```
+
+As expected, the page «The three best cat sites» is top-rated because every other page links to it. «Grumpy cats» is
+second because it is referenced from the important top-rated page and also from another page. The two inbound links
+makes it superior to the two other pages that are linked from the top-rated page. 
+
+Let's see what happens if we remove the link from the top-rated page pointing to the «Grumpy Cats» page:
+
+```python
+    {...},
+    'best-three-cat-sites': {
+        'title': 'The three best cat sites',
+        'links-to': (
+            # 'grumpy-cats', <---- Removed 
+            'fluffy-cats',
+            'just-lol-cats'
+        )
+    }
+```
+    
+```python
+Page Rank Results:
+==================
+
+Rank  Page name                       Page rank value
+-----------------------------------------------------
+1     The three best cat sites        2.01442192032
+2     Just Lol-Cats                   1.00612146063
+3     Fluffy Cats                     1.00612146063
+4     Best cat videos on the planet   0.577597280469
+5     Grumpy Cats                     0.395476909134
+```
+
+Again, as expected, our «Grumpy Cats» page takes a deep dive as soon as a top-rated page decides to no longer include it
+as a link. It's even on the last position because «Best cat videos» at least gets referenced from a more important
+page «Just Lol-Cats» which iself is referenced by the top-rated page.
+
+Let's say the owners of «Grumpy Cat» get really sad about this and decide to remove their link to «The three best 
+cat sites» in return:
+
+```python
+    'grumpy-cats': {
+        'title': 'Grumpy Cats',
+        'links-to': (
+            # 'best-three-cat-sites', <------- removed
+        )
+    },
+    {...}
+```
+    
+```python
+Page Rank Results:
+==================
+
+Rank  Page name                       Page rank value
+-----------------------------------------------------
+1     The three best cat sites        1.13303700395
+2     Just Lol-Cats                   0.631540876989
+3     Fluffy Cats                     0.631540876989
+4     Best cat videos on the planet   0.418404952215
+5     Grumpy Cats                     0.327822147305
+```
+
+Even though this somewhat seems to have an effect on the rating, the ranking is not affected because the pages are all
+connected and suffer the same – even «Grumpy Cats» itself. 
+
+Since «Grumpy Cats» is now a dead end, we are really happy about that damping factor. Watch what happens when we 
+disable it (i.e. set $$d=1$$):
+
+```python
+Page Rank Results:
+==================
+
+Rank  Page name                       Page rank value
+-----------------------------------------------------
+1     The three best cat sites        0.070738758418
+2     Just Lol-Cats                   0.0376406375322
+3     Fluffy Cats                     0.0376406375322
+4     Best cat videos on the planet   0.0200272965764
+5     Grumpy Cats                     0.0106568686888
+```
+The overall rank value decreases significantly. If we increase the iterations to $$k=1000$$:
+```python
+Page Rank Results:
+==================
+
+Rank  Page name                       Page rank value
+-----------------------------------------------------
+1     The three best cat sites        1.53528832502e-27
+2     Just Lol-Cats                   8.16909854913e-28
+3     Fluffy Cats                     8.16909854913e-28
+4     Best cat videos on the planet   4.34668654858e-28
+5     Grumpy Cats                     2.31282360446e-28
+
+```
+our «link juice» has practically vanished. 
+
 
 ### Summary
 
