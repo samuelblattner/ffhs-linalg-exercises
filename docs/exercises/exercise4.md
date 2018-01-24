@@ -12,7 +12,7 @@ In this article we'll cover the mechanics of the algorithm itself and some mathe
 is based on.
 
 ### Eigenvalue and Eigenvectors
-In order to better understand the mathematics behind, we need to introduce a topic called «Eigenvalue/Eigenvector» first. 
+In order to better understand the mathematics behind, we need to very briefly introduce a topic called «Eigenvalue/Eigenvector» first. 
 Let's assume we have the following Matrix:
 
 $$ 
@@ -121,8 +121,8 @@ resulting state behave for $$n=\infty$$? The following diagram shows the results
  
 ![State Changes](images/ex4_state_iterations.png "State diagram"){:width="80%"}
 
-As you can easily see, the probabilities for the individual states converge to a value in which the system is «stable»
-where it will stay, no matter how many more iterations will follow.
+As you can see, the probabilities for the individual states converge to a value in which the system will be «stable»
+and stay the same, no matter how many more iterations will follow.
 
 ### Basic principle of the Page Rank Algorithm
 Now that we have a basic understanding of the Markov-Matrix, let's dig into the mechanics of the Page Rank Algorithm.
@@ -130,7 +130,7 @@ Let's assume that we have five web pages $$W_{1}$$ to $$W_{5}$$ like so:
 
 ![State Changes](images/ex4_websites1.png "State diagram"){:width="40%"}
 
-Notice, that this describes a directed graph with the arrows representing hyperlinks to another web page. From this, we
+Notice, that this describes a directed graph with the arrows representing hyperlinks to other web pages. From this, we
 can derive the following adjacency matrix:
 
 $$
@@ -153,28 +153,28 @@ $$
 The basic concept behind the algorithm is to let every web page give their votes for other pages by mentioning them in a
 hyperlink. So, the more pages link to a specific page the higher this page gets weighed, i.e. «ranked». If we define that
 every page has an initial weight of 1 and that every inbound link increases that weight by 1, then our diagram would
-look the following.
+look the following:
 
 ![State Changes](images/ex4_websites2.png "State diagram"){:width="40%"}
 
 Currently, if we put this situation into an equation to calculate the weight of one specific page, we would get:
 
-$$ w_{i} = \sum_{j=1}^{n} M_{ij} $$
+$$ w_{i} = \sum_{j=1}^{n} M_{ji} $$
 
 However, this setup would be very easy to manipulate just by adding a ton of links to a page pointing to the web page 
 for which you want to have a good rating. In order to eliminate this flaw, we give every page a total vote of 1 which 
 it distributes evenly over all outbound links: 
 
-$$ w_{i} = \sum_{j=1}^{n} \frac{M_{ij}}{n_{j}} $$
+$$ w_{i} = \sum_{j=1}^{n} \frac{M_{ji}}{n_{j}} $$
 
 whereas $$n_{j}$$ represents the number of links on page $$j$$. So, on pages that have hunders of links (e.g. indexing
 pages) a link to your page is literally «worth less» than a link from a page with only three links in total.
 
-Still, one could create numberous individual pages with just one link and then point these pages to the page that should
+Still, one could create numerous individual pages with just one link and then point these pages to the page that should
 get a lot of votes. In order to mitigate this risk, one further measure is added to the equation: the weight of the
 issuing page itself:
 
-$$ w_{i} = \sum_{j=1}^{n} \frac{M_{ij}}{n_{j}} w_{j} $$
+$$ w_{i} = \sum_{j=1}^{n} \frac{M_{ji}}{n_{j}} w_{j} $$
 
 Put into words, this means: The more votes a specific page has, i.e. the more popular a page is, the higher the value
 of votes it gives to other pages.
@@ -184,13 +184,13 @@ does this chain start? It starts at every page having the initial weight of 1. T
 the weights iteration by iteration. It's as if we had a block of stone and we use sand paper to grind it down to a
 sculpture. And the finished sculpture represents the «stable» state of our system.
 
-Now, we know from the previous section that somewhere in eternety, our Markov-Chain will end up in this perfect 
+Now, we know from the previous section that somewhere in eternity, our Markov-Chain will end up in this perfect 
 equilibrium, where nothing has to be added or removed anymore and where the input state corresponds to the output state.
 This is represented by the Eigenvalue-equation:
 
 $$
 
-A\vec{w}=\lambda\vec{w}
+A\vec{w}=\lambda\vec{w}, \lambda = 1
 
 $$
 
@@ -268,13 +268,13 @@ same would happen if two nodes link to each other exclusively.
 
 In order to overcome this «juice leak» we add the so-called «damping-factor» to the equation of one single iteration:
  
-$$ w_{i} = \frac{1-d}{n} + d\cdot\sum_{j=1}^{n} \frac{M_{ij}}{n_{j}} w_{j}   $$
+$$ w_{i} = \frac{1-d}{n} + d\cdot\sum_{j=1}^{n} \frac{M_{ji}}{n_{j}} w_{j}   $$
 
 The damping-factor (usually 0.85) will decrease the weight of incoming links a little, but add a constant value of 
 $$1-d$$ divided by the number of pages $$n$$ with every iteration. This will guarantee that there is always some source
 of «base value» streaming into the system so that it doesn't dry out because of leaky pages.
 
-This will lead to our final iteration formula:
+This will lead to our final iteration formula<sup>[^3]</sup>:
 
 $$
 
@@ -506,6 +506,7 @@ our «link juice» has practically vanished.
 ### References
 [^1]: https://www.google.com/patents/US6285999
 [^2]: https://www.youtube.com/watch?v=4wTHFmZPhT0
+[^3]: Teschl, Gerald & Susanne (2013): «Mathematik für Informatiker», 4. Auflage, Springer Verlag    
 
 
 <script type="text/javascript" async

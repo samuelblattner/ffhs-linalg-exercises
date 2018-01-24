@@ -50,10 +50,18 @@ such as calculating its length (i.e. magnitude) or its scalar product, for examp
 
 ## Exercises
 
-### Exercies 1: «Wohin klickt die Maus?»
+### Exercise 1: «Wohin klickt die Maus?»
 Using linear algebra to determine if a given set of coordinates lies on a specific line segment or not.
-
 [Goto Exercise 1 Docs](./exercises/exercise1.html)
+
+### Exercise 2: «Affine Transformationen»
+Transforming geometry using matrices.
 [Goto Exercise 2 Docs](./exercises/exercise2.html)
+
+### Exercise 3: «Rotation 3D-Cube»
+Rotating a 3D cube.
 [Goto Exercise 3 Docs](./exercises/exercise3.html)
+
+### Exercise 4: «Page Rank Algorithm»
+A brief overview over Google's Page Rank Algorithm.
 [Goto Exercise 4 Docs](./exercises/exercise4.html)

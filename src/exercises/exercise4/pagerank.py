@@ -1,12 +1,11 @@
 import numpy as np
 
 # Statics
-
 PAGES = {
     'grumpy-cats': {
         'title': 'Grumpy Cats',
         'links-to': (
-            # 'best-three-cat-sites',
+            'best-three-cat-sites',
         )
     },
     'fluffy-cats': {
@@ -32,7 +31,7 @@ PAGES = {
     'best-three-cat-sites': {
         'title': 'The three best cat sites',
         'links-to': (
-            # 'grumpy-cats',
+            'grumpy-cats',
             'fluffy-cats',
             'just-lol-cats'
         )
