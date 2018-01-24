@@ -6,17 +6,18 @@ layout: default
 
 ### Introduction
 One of the most vital concepts behind how Google ranks all the indexed websites is the so called «Page Rank Algorithm». 
-First introduced and patented by Larry Page in 1998 [^1] this algorithm describes a method to assign a weight to every
-page in the index depending on how many other pages link to that page and on the weight these pages have themselves.
-In this article we'll cover the mechanics of the algorithm itself and some mathematical basics on which the algorithm relies on, such as the Markov-Chain and the Eigenvalue-problem.
+First introduced and patented by Larry Page in 1998<sup>[^1]</sup>, this algorithm describes a method to assign a weight
+to every page in the index, depending on how many other pages link to that page and on the weight of these pages.
+In this article we'll cover the mechanics of the algorithm itself and some mathematical basics on which the algorithm 
+is based on.
 
 ### Eigenvalue and Eigenvectors
-In order to better understand the mathematics behind, we need to cover a topic called «Eigenvalue/Eigenvector» first. 
+In order to better understand the mathematics behind, we need to introduce a topic called «Eigenvalue/Eigenvector» first. 
 Let's assume we have the following Matrix:
 
 $$ 
 
-A=\begin{bmatrix}1 & 2 \\ 3 & 4\end{bmatrix}
+A=\begin{bmatrix}1 & 2 \\ 3 & 0\end{bmatrix}
 
 $$
 
@@ -29,14 +30,16 @@ A\vec{x}=\lambda\vec{x}
 
 $$
 
-What is this good for? Well, imagine you have a square matrix of a million columns by a million rows – have fun 
-multiplying this monster with a vector. The neat thing about Eigenvalues is that you can represent the whole Matrix with
-just one scalar. And then do the multiplication with its corresponding Eigenvector instead. 
+What is this good for? Various things. In geometric terms for example, Eigenvectors will be affected by a
+transformation matrix in that they are only scaled (by their corresponding Eigenvalue $$\lambda$$)but not transformed
+in any other way, as Trefor Bazett explains it nicely in his video<sup>[^2]</sup>.
+In algebraic terms, we can use Eigenvalues to find out if a matrix is diagonizable. Diagonalized matrices are much easier
+to work with.
 
 ### The Markov-Chain
-Equally essential to the understanding of the Page Rank Algorithm is the so-called «Markov-Chain». It describes a 
-state-transformation matrix which holds the weights of an adjacency graph. And every weight represents the probability
-with which the described system will change its current state to another. Let's have a look at the following image to
+Essential to the understanding of the Page Rank Algorithm is the so-called «Markov-Chain». It describes a 
+state-transformation matrix which holds the weights of an adjacency graph. Every weight represents the probability
+with which the described system will change its current state to another. Let's have a look at the following graph to
 get a clearer picture:
 
 ![State Changes](images/ex4_state_changes.png "State diagram"){:width="40%"}
@@ -45,9 +48,10 @@ This diagram shows three stages $$ S_{1}, S_{2} $$ and $$ S_{3} $$. The weights 
 every state to change into another. $$S_{2} $$ and $$S_{3}$$ can stay unchanged, whereas $$S_{1}$$ will always change
 into another state. The outbound weigths of every state sum up to 1.
 
-Now, if we were to represent this model, we can use a vector $$\vec{s}$$ to represent the probability in which state we
-find ourselves at this very moment, and use an nxn matrix to represent the probabilities with which the current state 
-will change into another. Let's assume that in the beginning, our system is in state $$S_{1}$$:
+Now, if we were to represent this model mathematically, we can use a vector $$\vec{s}$$ to represent the probability 
+of the state in which we see ourselves at this very moment, and use an $$n x n$$ matrix to represent the probabilities 
+with which the current state will change into another. Let's assume that in the beginning, our system is in 
+state $$S_{1}$$:
 
 $$
 
@@ -499,12 +503,9 @@ Rank  Page name                       Page rank value
 ```
 our «link juice» has practically vanished. 
 
-
-### Summary
-
-
 ### References
 [^1]: https://www.google.com/patents/US6285999
+[^2]: https://www.youtube.com/watch?v=4wTHFmZPhT0
 
 
 <script type="text/javascript" async
