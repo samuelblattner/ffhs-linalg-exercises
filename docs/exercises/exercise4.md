@@ -290,7 +290,7 @@ $$
 
 $$
 
-This shows that our web page $$W_{4}$$ will be ranked highest (where all the votes end up) while $$W_{1}$$ and $$W_{5} 
+This shows that our web page $$W_{4}$$ will be ranked highest (where all the votes end up) while $$W_{1}$$ and $$W_{5}$$ 
 will be ranked lowest (because they don't even have inbound links).
 
 
