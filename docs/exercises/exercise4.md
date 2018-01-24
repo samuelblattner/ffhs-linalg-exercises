@@ -170,7 +170,7 @@ Still, one could create numberous individual pages with just one link and then p
 get a lot of votes. In order to mitigate this risk, one further measure is added to the equation: the weight of the
 issuing page itself:
 
-$$ w_{i} = \sum_{j=1}^{n} \frac{M_{ij}}{n_{j}} \cdot w_{j} $$
+$$ w_{i} = \sum_{j=1}^{n} \frac{M_{ij}}{n_{j}} w_{j} $$
 
 Put into words, this means: The more votes a specific page has, i.e. the more popular a page is, the higher the value
 of votes it gives to other pages.
@@ -239,9 +239,77 @@ $$
              
 $$
 
+After five iterations, our state looks like this:
+
+$$
+
+  \begin{bmatrix}
+    0 &  0 &  0 &  0 &  0 \\
+    0.5 &  0 &  0 &  0 &  0 \\
+    0.5 &  1 &  0 &  0 &  1 \\
+    0 &  0 &  1 &  0 &  0 \\
+    0 &  0 &  0 &  0 &  0 
+  \end{bmatrix}^{5} 
+  \cdot \begin{bmatrix}
+        1 \\ 1 \\ 1 \\ 1 \\ 1
+        \end{bmatrix} = \begin{bmatrix}
+                                0 \\ 0 \\ 0 \\ 0 \\ 0
+                                \end{bmatrix} 
+         
+$$
+
+Oh snap! Where did all our votes go?? Well, if you look at the diagram again you'll see that $$W_{4}$$ marks kind of
+a dead end. If you follow the links you will eventually end up at $$W_{4}$$ and never get out of it again!  The 
+same would happen if two nodes link to each other exclusively.
+
+In order to overcome this «juice leak» we add the so-called «damping-factor» to the equation of one single iteration:
+ 
+$$ w_{i} = \frac{1-d}{n} + d\cdot\sum_{j=1}^{n} \frac{M_{ij}}{n_{j}} w_{j}   $$
+
+The damping-factor (usually 0.85) will decrease the weight of incoming links a little, but add a constant value of 
+$$1-d$$ divided by the number of pages $$n$$ with every iteration. This will guarantee that there is always some source
+of «base value» streaming into the system so that it doesn't dry out because of leaky pages.
+
+This will lead to our final iteration formula:
+
+$$
+
+\vec{w}(k) = (1 - d) \cdot \sum_{j=0}^{k-1}d^{j}M^{j}\begin{bmatrix}1\\1\\1\\1\\1\end{bmatrix} + d^{k}M^{k}\vec{w}(0)
+
+$$
+
+With increasing $$k$$ the equilibrium i.e. the Eigenvector will be found at:
+
+$$
+
+\begin{bmatrix}0.15 \\ 0.21375 \\ 0.522938 \\ 0.594497 \\ 0.15 \end{bmatrix}
+
+$$
+
+This shows that our web page $$W_{4}$$ will be ranked highest (where all the votes end up) while $$W_{1}$$ and $$W_{5} 
+will be ranked lowest (because they don't even have inbound links).
 
 
 ### Demonstrating the Page Rank Algorithm
+
+Let's demonstrate the algorithm with a little Python program:
+
+First, let's define a dictionary that holds the descriptions of our web pages:
+
+```python
+PAGES = {
+    'funny-cat-pictures': {
+        'links-to': (
+            '
+        )
+    },
+    'fakenews-of-the-day': {
+        'links-to': (
+        )
+        
+)
+    
+```
 
 ### Summary
 
